@@ -1,0 +1,3 @@
+[submodule "kaiji-protoc"]
+	path = kaiji-protoc
+	url = https://github.com/zgtk-guri/kaiji-protoc.git
