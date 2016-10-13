@@ -1,0 +1,13 @@
+db:
+  production:
+    adapter:  mysql2
+    host:     localhost
+    username: root
+    password:
+    database: kaiji
+  development:
+    adapter:  mysql2
+    host:     localhost
+    username: root
+    password:
+    database: kaiji
