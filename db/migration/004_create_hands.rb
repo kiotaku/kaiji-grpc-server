@@ -1,7 +1,7 @@
 class CreateHands < ActiveRecord::Migration
   def up
     create_table :hands do |t|
-      t.integer :hands_id, null: false
+      t.string :hands_id, null: false
       t.integer :suit, null: false
       t.integer :number, null: false
     end
