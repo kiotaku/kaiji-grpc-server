@@ -1,12 +1,12 @@
 class CreateUsers < ActiveRecord::Migration
   def up
     create_table :users, id: false do |t|
-      t.integer :id
-      t.string :name
-      t.integer :points
-      t.boolean :is_available
-      t.boolean :is_anonymous
-      t.integer :continue_count
+      t.integer :id, null: false
+      t.string :name, default: 'anonymous'
+      t.integer :points, default: 10_000, null: false
+      t.boolean :is_available, default: true, null: false
+      t.boolean :is_anonymous, default: true, null: false
+      t.integer :continue_count, default: 0, null: false
     end
   end
 
