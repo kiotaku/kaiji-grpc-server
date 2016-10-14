@@ -1,18 +1,63 @@
 require_relative './../protoc_ruby/kaiji_service_pb'
 
 class KaijiServer < Net::Gurigoro::Kaiji::Kaiji::Service
-  def ping
+  def initialize(logger)
+    @logger = logger
   end
 
-  def log
+  def ping(_req, _call)
+    Net::Gurigoro::Kaiji::PingReply.new(message: 'pong')
   end
 
-  def get_user_by_id
+  def log(req, _call)
+    case req.LogLevel
+    when Net::Gurigoro::Kaiji::LogLevel.LOG_DEBUG
+      @logger.debug "user_id: #{req.userId} message: #{req.message}"
+    when Net::Gurigoro::Kaiji::LogLevel.LOG_INFO
+      @logger.info "user_id: #{req.userId} message: #{req.message}"
+    when Net::Gurigoro::Kaiji::LogLevel.LOG_WARN
+      @logger.warn "user_id: #{req.userId} message: #{req.message}"
+    when Net::Gurigoro::Kaiji::LogLevel.LOG_ERROR
+      @logger.error "user_id: #{req.userId} message: #{req.message}"
+    when Net::Gurigoro::Kaiji::LogLevel.LOG_FATAL
+      @logger.fatal "user_id: #{req.userId} message: #{req.message}"
+    else
+      @logger.unknown "user_id: #{req.userId} message: #{req.message}"
+    end
+    Net::Gurigoro::Kaiji::Empty.new
   end
 
-  def add_user
+  def get_user_by_id(req, _call)
+    user_model_convert_to_get_user_reply(User.where(id: req.userId))
   end
 
-  def modify_user
+  def add_user(req, _call)
+    success = User.add(req.userId,
+                       name: req.name,
+                       is_available: req.isAvailable,
+                       is_anonymous: req.isAnonymous)
+    Net::Gurigoro::Kaiji::AddUserReply.new(isSucceed: success,
+                                           userId: req.userId)
+  end
+
+  def modify_user(req, _call)
+    success = User.modify(req.userId,
+                          name: req.name,
+                          is_available: req.isAvailable,
+                          is_anonymous: req.isAnonymous)
+    Net::Gurigoro::Kaiji::ModifyUserReply.new(isSucceed: success,
+                                              userId: req.userId)
+  end
+
+  private
+
+  def user_model_convert_to_get_user_reply(user)
+    Net::Gurigoro::Kaiji::GetUserReply.new(isFound: false) if user.present?
+    Net::Gurigoro::Kaiji::GetUserReply.new(
+      isFound: true,
+      userId: user.id, name: user.name, point: user.points,
+      isAvailable: user.is_available, isAnonymous: user.is_anonymous,
+      continue_count: user.continue_count
+    )
   end
 end
