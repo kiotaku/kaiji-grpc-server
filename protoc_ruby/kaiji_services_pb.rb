@@ -20,10 +20,6 @@ module Net
           rpc :Ping, PingRequest, PingReply
           # Logging
           rpc :Log, LogRequest, Empty
-          # Client Login/Logout
-          rpc :ClientLogin, ClientLoginRequest, ClientLoginReply
-          rpc :ClientLogout, ClientLoginRequest, ClientLogoutReply
-          rpc :ClientChangeStatus, ClientChangeStatusRequest, ClientChangeStatusReply
           # Users
           rpc :GetUserById, GetUserByIdRequest, GetUserReply
           rpc :AddUser, AddUserRequest, AddUserReply

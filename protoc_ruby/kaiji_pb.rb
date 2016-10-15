@@ -4,27 +4,6 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "net.gurigoro.kaiji.ClientLoginRequest" do
-    optional :accessKey, :string, 1
-    optional :loginStatus, :enum, 2, "net.gurigoro.kaiji.LoginStatus"
-  end
-  add_message "net.gurigoro.kaiji.ClientLoginReply" do
-    optional :isSucceed, :bool, 1
-    optional :accessToken, :string, 2
-  end
-  add_message "net.gurigoro.kaiji.ClientChangeStatusRequest" do
-    optional :accessToken, :string, 1
-    optional :loginStatus, :enum, 2, "net.gurigoro.kaiji.LoginStatus"
-  end
-  add_message "net.gurigoro.kaiji.ClientChangeStatusReply" do
-    optional :isSucceed, :bool, 1
-  end
-  add_message "net.gurigoro.kaiji.ClientLogoutRequest" do
-    optional :accessToken, :string, 1
-  end
-  add_message "net.gurigoro.kaiji.ClientLogoutReply" do
-    optional :isSucceed, :bool, 1
-  end
   add_message "net.gurigoro.kaiji.PingRequest" do
     optional :message, :string, 1
     optional :time, :int64, 2
@@ -34,7 +13,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :time, :int64, 2
   end
   add_message "net.gurigoro.kaiji.LogRequest" do
-    optional :accessKey, :string, 1
+    optional :accessToken, :string, 1
     optional :unixTime, :int64, 2
     optional :LogLevel, :enum, 3, "net.gurigoro.kaiji.LogLevel"
     optional :userId, :int64, 4
@@ -50,7 +29,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :isFound, :bool, 1
     optional :userId, :int64, 2
     optional :name, :string, 3
-    optional :coin, :int64, 4
+    optional :point, :int64, 4
     optional :isAvailable, :bool, 5
     optional :isAnonymous, :bool, 6
     optional :continueCount, :int64, 7
@@ -77,13 +56,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :isSucceed, :bool, 1
     optional :userId, :int64, 2
   end
-  add_enum "net.gurigoro.kaiji.LoginStatus" do
-    value :LOGIN_NONE, 0
-    value :LOGIN_OFFLINE, 1
-    value :LOGIN_ONLINE, 2
-    value :LOGIN_GAMING, 3
-    value :LOGIN_ERROR, 4
-  end
   add_enum "net.gurigoro.kaiji.LogLevel" do
     value :LOG_TRACE, 0
     value :LOG_DEBUG, 1
@@ -97,12 +69,6 @@ end
 module Net
   module Gurigoro
     module Kaiji
-      ClientLoginRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientLoginRequest").msgclass
-      ClientLoginReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientLoginReply").msgclass
-      ClientChangeStatusRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientChangeStatusRequest").msgclass
-      ClientChangeStatusReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientChangeStatusReply").msgclass
-      ClientLogoutRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientLogoutRequest").msgclass
-      ClientLogoutReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ClientLogoutReply").msgclass
       PingRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.PingRequest").msgclass
       PingReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.PingReply").msgclass
       LogRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.LogRequest").msgclass
@@ -113,7 +79,6 @@ module Net
       AddUserReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.AddUserReply").msgclass
       ModifyUserRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ModifyUserRequest").msgclass
       ModifyUserReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.ModifyUserReply").msgclass
-      LoginStatus = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.LoginStatus").enummodule
       LogLevel = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.LogLevel").enummodule
     end
   end

@@ -16,7 +16,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.AddPointRequest" do
     optional :accessToken, :string, 1
     optional :userId, :int64, 2
-    optional :points, :int64, 3
+    optional :addPoints, :int64, 3
     optional :reason, :string, 4
   end
   add_message "net.gurigoro.kaiji.AddPointReply" do
