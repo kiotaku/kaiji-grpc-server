@@ -1,7 +1,14 @@
 require_relative './../protoc_ruby/blackjack_services_pb'
 
-class BlackjackServer < Net::Gurigoro::Kaiji::BlackJack::Service
-  def create_new_game_room
+class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
+  def create_new_game_room(req, _call)
+    begin
+      room = BlackjackRoom.create_room(req.usersId)
+    rescue
+      Net::Gurigoro::Kaiji::Blackjack::CreateNewGameRoomReply.new isSucceed: false
+    end
+    Net::Gurigoro::Kaiji::Blackjack::CreateNewGameRoomReply.new isSucceed: true,
+                                                                gameRoomId: room.id
   end
 
   def betting

@@ -1,7 +1,15 @@
 require 'securerandom'
 
 class BlackjackRoom < ActiveRecord::Base
-  has_one :user
+  class << self
+    def create_room(user_ids)
+      room = BlackjackRoom.create(
+        blackjack_players_id: SecureRandom.hex(16),
+        dealer_hands_id: SecureRandom.hex(16)
+      )
+      BlackjackPlayer.add_players(room.id, user_ids)
+      room
+    end
 
   def create_room(user_id, bet_points)
     room = BlackjackRoom.create(
