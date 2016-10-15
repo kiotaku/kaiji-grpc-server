@@ -14,5 +14,11 @@ class User < ActiveRecord::Base
       points_balance = user.points
       user.update(points: points_balance + points)
     end
+
+    def reduce_point(id, points)
+      user = User.find(id)
+      points_balance = user.points
+      user.update(points: points_balance - points)
+    end
   end
 end
