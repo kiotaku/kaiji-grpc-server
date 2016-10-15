@@ -3,11 +3,11 @@ db:
     adapter:  mysql2
     host:     localhost
     username: root
-    password:
+    password: kaiji
     database: kaiji
   development:
     adapter:  mysql2
     host:     localhost
     username: root
-    password:
+    password: kaiji
     database: kaiji
