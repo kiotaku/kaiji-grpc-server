@@ -1,4 +1,4 @@
-require_relative './../protoc_ruby/kaiji_service_pb'
+require_relative './../protoc_ruby/kaiji_services_pb'
 
 class KaijiServer < Net::Gurigoro::Kaiji::Kaiji::Service
   def initialize(logger)

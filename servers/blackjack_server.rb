@@ -1,4 +1,4 @@
-require_relative './../protoc_ruby/blackjack_service_pb'
+require_relative './../protoc_ruby/blackjack_services_pb'
 
 class BlackjackServer < Net::Gurigoro::Kaiji::BlackJack::Service
   def create_new_game_room
