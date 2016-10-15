@@ -32,20 +32,20 @@ class KaijiServer < Net::Gurigoro::Kaiji::Kaiji::Service
   end
 
   def add_user(req, _call)
-    success = User.add(req.userId,
-                       name: req.name,
-                       is_available: req.isAvailable,
-                       is_anonymous: req.isAnonymous)
-    Net::Gurigoro::Kaiji::AddUserReply.new(isSucceed: success,
+    result = User.add(req.userId,
+                      name: req.name,
+                      is_available: req.isAvailable,
+                      is_anonymous: req.isAnonymous)
+    Net::Gurigoro::Kaiji::AddUserReply.new(isSucceed: result,
                                            userId: req.userId)
   end
 
   def modify_user(req, _call)
-    success = User.modify(req.userId,
-                          name: req.name,
-                          is_available: req.isAvailable,
-                          is_anonymous: req.isAnonymous)
-    Net::Gurigoro::Kaiji::ModifyUserReply.new(isSucceed: success,
+    result = User.modify(req.userId,
+                         name: req.name,
+                         is_available: req.isAvailable,
+                         is_anonymous: req.isAnonymous)
+    Net::Gurigoro::Kaiji::ModifyUserReply.new(isSucceed: result,
                                               userId: req.userId)
   end
 
