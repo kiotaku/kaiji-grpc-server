@@ -11,12 +11,11 @@ class BlackjackRoom < ActiveRecord::Base
       room
     end
 
-  def create_room(user_id, bet_points)
-    room = BlackjackRoom.create(
-      user_id: user_id, bet_points: bet_points,
-      user_hands_id_first: SecureRandom.hex(16),
-      dealer_hands_id: SecureRandom.hex(16)
-    )
-    room.id
+    def destroy_room(room_id)
+      room = BlackjackRoom.find(room_id)
+      BlackjackPlayer.remove_players(room.id)
+      Hand.delete_hands(room.dealer_hands_id)
+      room.destroy
+    end
   end
 end
