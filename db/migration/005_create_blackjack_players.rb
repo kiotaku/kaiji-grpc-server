@@ -5,7 +5,7 @@ class CreateBlackjackPlayers < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.string :user_hands_id_first, null: false
       t.string :user_hands_id_second
-      t.integer :bet_points, null: false
+      t.integer :bet_points, default: 0, null: false
       t.boolean :is_split, default: false, null: false
       t.boolean :is_double_down, default: false, null: false
     end
