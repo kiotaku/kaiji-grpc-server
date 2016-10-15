@@ -1,12 +1,12 @@
 class User < ActiveRecord::Base
   belongs_to :blackjack_room, foreign_key: user_id
 
-  def add(id, params = {})
+  def self.add(id, params = {})
     user = User.new params.merge(id: id)
-    user.save!
+    user.save
   end
 
-  def modify(id, params = {})
-    User.find(id: id).update(params)
+  def self.modify(id, params = {})
+    User.find(id).update(params)
   end
 end
