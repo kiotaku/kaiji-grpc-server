@@ -2,7 +2,7 @@
 # Source: poker.proto for package 'net.gurigoro.kaiji.poker'
 
 require 'grpc'
-require 'poker_pb'
+require_relative './poker_pb'
 
 module Net
   module Gurigoro

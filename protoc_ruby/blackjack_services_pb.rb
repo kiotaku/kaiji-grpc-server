@@ -2,7 +2,7 @@
 # Source: blackjack.proto for package 'net.gurigoro.kaiji.blackjack'
 
 require 'grpc'
-require 'blackjack_pb'
+require_relative './blackjack_pb'
 
 module Net
   module Gurigoro

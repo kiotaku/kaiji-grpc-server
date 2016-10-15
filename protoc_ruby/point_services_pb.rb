@@ -2,7 +2,7 @@
 # Source: point.proto for package 'net.gurigoro.kaiji'
 
 require 'grpc'
-require 'point_pb'
+require_relative './point_pb'
 
 module Net
   module Gurigoro

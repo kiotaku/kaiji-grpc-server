@@ -2,7 +2,7 @@
 # Source: kaiji.proto for package 'net.gurigoro.kaiji'
 
 require 'grpc'
-require 'kaiji_pb'
+require_relative './kaiji_pb'
 
 module Net
   module Gurigoro
