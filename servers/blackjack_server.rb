@@ -33,13 +33,13 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
     user_actions = BlackjackPlayer.can_user_action?(req.gameRoomId)
     Net::Gurigoro::Kaiji::Blackjack::SetFirstDealedCardsReply.new(
       isSucceed: true,
-      actions: user_actions.map { |action|
+      actions: user_actions.map do |action|
         Net::Gurigoro::Kaiji::Blackjack::AllowedPlayerActions.new(
           userId: action[:userId],
           cardPoints: action[:cardPoints],
           actions: action[:actions]
         )
-      }
+      end
     )
   end
 

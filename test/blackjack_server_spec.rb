@@ -63,15 +63,19 @@ RSpec.describe 'KaijiServer' do
     reply = @stub.set_first_dealed_cards(Net::Gurigoro::Kaiji::Blackjack::SetFirstDealedCardsRequest.new(
       accessToken: 'test',
       gameRoomId: BlackjackRoom.all.first.id,
-      playerCards: (1..10).map { |x| Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
+      playerCards: (1..10).map do |x|
+        Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
           userId: x,
           cards: Net::Gurigoro::Kaiji::TrumpCards.new(
-            cards: [1, 13].map { |x| Net::Gurigoro::Kaiji::TrumpCard.new(
-              suit: 0,
-              number: x
-            ) }
+            cards: [1, 13].map do |num|
+              Net::Gurigoro::Kaiji::TrumpCard.new(
+                  suit: 0,
+                  number: num
+              )
+            end
           )
-        ) }
+        )
+      end
     ))
     expect(Hand.all.count).to eq 20
   end
