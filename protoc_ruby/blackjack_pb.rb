@@ -90,6 +90,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :accessToken, :string, 1
     optional :gameRoomId, :int64, 2
     optional :userId, :int64, 3
+    optional :card, :message, 4, "net.gurigoro.kaiji.TrumpCard"
   end
   add_message "net.gurigoro.kaiji.blackjack.DoubleDownReply" do
     optional :isSucceed, :bool, 1
