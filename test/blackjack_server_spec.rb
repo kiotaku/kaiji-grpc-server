@@ -168,6 +168,25 @@ RSpec.describe 'KaijiServer' do
     ))
     expect(reply.isSucceed).to eq true
     expect(BlackjackPlayer.user_hands_split?(BlackjackRoom.all.first.id, 10)).to eq true
+    expect(BlackjackPlayer.where(
+      blackjack_room_id: BlackjackRoom.all.first.id,
+      user_id: 10
+      ).first.bet_points).to eq 200
+    expect(User.find_by_id(10).points).to eq 9800
+  end
+
+  it 'double down' do
+    reply = @stub.double_down(Net::Gurigoro::Kaiji::Blackjack::DoubleDownRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      userId: 9,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 8
+      )
+    ))
+    expect(reply.cardPoints).to eq 21
+    expect(BlackjackPlayer.find_in_room(BlackjackRoom.all.first.id, 9).is_double_down).to eq true
   end
 
   it 'destroy game room' do

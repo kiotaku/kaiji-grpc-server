@@ -93,6 +93,25 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def double_down(req, _call)
+    result = BlackjackPlayer.user_hands_double_down(
+      req.gameRoomId,
+      req.userId,
+      req.card
+    )
+    Net::Gurigoro::Kaiji::Blackjack::DoubleDownReply.new(
+      isSucceed: result,
+      userId: req.userId,
+      isBusted: BlackjackPlayer.user_hands_busted?(
+        req.gameRoomId,
+        req.userId,
+        false
+      ),
+      cardPoints: BlackjackPlayer.user_hands_point(
+        req.gameRoomId,
+        req.userId,
+        false
+      )
+    )
   end
 
   def set_next_dealers_card(req, _call)

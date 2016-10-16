@@ -26,12 +26,7 @@ class BlackjackPlayer < ActiveRecord::Base
     end
 
     def add_user_hand(room_id, user_id, card, is_second)
-      player = find_in_room(room_id, user_id)
-      if is_second
-        Hand.add_hand(player.hands_id_second, card)
-      else
-        Hand.add_hand(player.hands_id_first, card)
-      end
+      _add_user_hand(find_in_room(room_id, user_id), card, is_second)
     end
 
     def user_hands_busted?(room_id, user_id, is_second)
@@ -91,6 +86,14 @@ class BlackjackPlayer < ActiveRecord::Base
       find_in_room(room_id, user_id).is_split
     end
 
+    def user_hands_double_down(room_id, user_id, card)
+      player = find_in_room(room_id, user_id)
+      return false unless bet_points_twice(player)
+      player.update(is_double_down: true)
+      _add_user_hand(player, card, false)
+      !Hand.stand(player.hands_id_first).zero?
+    end
+
     def bet_points_twice(player)
       bet_points = player.bet_points
       if User.has_points?(player.user_id, bet_points)
@@ -114,6 +117,16 @@ class BlackjackPlayer < ActiveRecord::Base
 
     def find_in_room(room_id, user_id)
       BlackjackPlayer.where(blackjack_room_id: room_id, user_id: user_id).first
+    end
+
+    private
+
+    def _add_user_hand(player, card, is_second)
+      if is_second
+        Hand.add_hand(player.hands_id_second, card)
+      else
+        Hand.add_hand(player.hands_id_first, card)
+      end
     end
   end
 end
