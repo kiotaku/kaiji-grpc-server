@@ -64,8 +64,7 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   def destroy_game_room(req, _call)
     begin
       BlackjackRoom.destroy_room(req.gameRoomId)
-    rescue => e
-      p e
+    rescue
       Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomReply.new isSucceed: false
     else
       Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomReply.new isSucceed: true

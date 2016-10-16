@@ -60,7 +60,7 @@ class BlackjackPlayer < ActiveRecord::Base
     end
 
     def find_in_room(room_id, user_id)
-      BlackjackPlayer.find(blackjack_room_id: room_id, user_id: user_id)
+      BlackjackPlayer.where(blackjack_room_id: room_id, user_id: user_id).first
     end
   end
 end
