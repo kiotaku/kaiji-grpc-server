@@ -11,8 +11,24 @@ class BlackjackRoom < ActiveRecord::Base
       room
     end
 
+    def betting(room_id, user_id, bet_points)
+      return 3 unless BlackjackPlayer.exist_in_room?(room_id, user_id)
+      return 2 unless BlackjackPlayer.can_bet?(room_id, user_id)
+      return 1 unless User.has_points?(user_id, bet_points)
+      BlackjackPlayer.bet_points(room_id, user_id, bet_points)
+      User.reduce_point(user_id, bet_points)
+      0
+    end
+
+    def add_dealer_hand(room_id, card)
+      Hand.add_hand(
+        BlackjackRoom.find(room_id).dealer_hands_id,
+        card
+      )
+    end
+
     def destroy_room(room_id)
-      room = BlackjackRoom.find(room_id)
+      room = BlackjackRoom.find_by_id(room_id)
       BlackjackPlayer.remove_players(room.id)
       Hand.delete_hands(room.dealer_hands_id)
       room.destroy

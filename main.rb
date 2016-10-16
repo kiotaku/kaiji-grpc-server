@@ -11,9 +11,10 @@ ActiveRecord::Base.logger = Logger.new './log/database.log'
 require_relative './model/user'
 require_relative './model/hand'
 require_relative './model/blackjack_room'
+require_relative './model/blackjack_player'
 
-require_relative './calculator/point_calculator'
-require_relative './calculator/action_checker'
+require_relative './util/point_calculator'
+require_relative './util/action_checker'
 
 require_relative './servers/blackjack_server'
 require_relative './servers/kaiji_server'
