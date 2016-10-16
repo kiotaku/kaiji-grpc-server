@@ -104,6 +104,35 @@ class BlackjackPlayer < ActiveRecord::Base
       end
     end
 
+    def user_game_result(room_id, dealer_points)
+      players = BlackjackPlayer.where(blackjack_room_id: room_id)
+      players.map do |player|
+        results = []
+        if player.is_split
+          results.push PointCalculator.blackjack_game_points(
+            player.user_id,
+            player.hands_id_first,
+            dealer_points,
+            player.bet_points
+          )
+          results.push PointCalculator.blackjack_game_points(
+            player.user_id,
+            player.hands_id_second,
+            dealer_points,
+            player.bet_points
+          )
+        else
+          results.push PointCalculator.blackjack_game_points(
+            player.user_id,
+            player.hands_id_first,
+            dealer_points,
+            player.bet_points * 2
+          )
+        end
+        results
+      end
+    end
+
     def remove_players(room_id)
       players = BlackjackPlayer.where(blackjack_room_id: room_id)
       players.map do |player|

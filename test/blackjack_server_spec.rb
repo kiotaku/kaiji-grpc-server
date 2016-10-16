@@ -213,6 +213,18 @@ RSpec.describe 'KaijiServer' do
     expect(reply.isBusted).to eq true
   end
 
+  it 'game result' do
+    reply = @stub.get_game_result(Net::Gurigoro::Kaiji::Blackjack::GetGameResultRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id
+    ))
+    expect(reply.playerResults[0].gameResult).to eq :LOSE
+    expect(User.find_by_id(1).points).to eq 9_900
+    expect(User.find_by_id(2).points).to eq 10_100
+    expect(User.find_by_id(9).points).to eq 10_400
+    expect(User.find_by_id(10).points).to eq 10_200
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomRequest.new(
       accessToken: 'test',

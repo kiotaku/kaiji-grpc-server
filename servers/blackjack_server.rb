@@ -128,6 +128,12 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def get_game_result(req, _call)
+    Net::Gurigoro::Kaiji::Blackjack::GetGameResultReply.new(
+      isSucceed: true,
+      playerResults: BlackjackRoom.result_room(req.gameRoomId).flatten.map do |x|
+        Net::Gurigoro::Kaiji::Blackjack::PlayerResult.new(x)
+      end
+    )
   end
 
   def destroy_game_room(req, _call)

@@ -35,6 +35,11 @@ class BlackjackRoom < ActiveRecord::Base
       Hand.busted?(BlackjackRoom.find_by_id(room_id).dealer_hands_id)
     end
 
+    def result_room(room_id)
+      dealer_card_points = PointCalculator.blackjack_card_points(dealer_hands(room_id))
+      BlackjackPlayer.user_game_result(room_id, dealer_card_points)
+    end
+
     def destroy_room(room_id)
       room = BlackjackRoom.find_by_id(room_id)
       BlackjackPlayer.remove_players(room.id)
