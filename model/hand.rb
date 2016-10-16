@@ -20,6 +20,10 @@ class Hand < ActiveRecord::Base
       )
     end
 
+    def busted?(hands_id)
+      PointCalculator.blackjack_card_points(hands(hands_id)) > 21
+    end
+
     def delete_hands(hands_id)
       Hand.where(hands_id: hands_id).destroy_all
     end

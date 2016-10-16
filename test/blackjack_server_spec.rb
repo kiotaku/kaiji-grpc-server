@@ -13,6 +13,13 @@ RSpec.describe 'KaijiServer' do
       ALREADY_BETTED: 2,
       UNKNOWN_FAILED: 3
     }
+    @player_action = {
+      UNKNOWN: 0,
+      HIT: 1,
+      STAND: 2,
+      SPLIT: 3,
+      DOUBLEDOWN: 4
+    }
   end
 
   it 'create new game room' do
@@ -67,7 +74,7 @@ RSpec.describe 'KaijiServer' do
         Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
           userId: x,
           cards: Net::Gurigoro::Kaiji::TrumpCards.new(
-            cards: [1, 13].map do |num|
+            cards: [3, 13].map do |num|
               Net::Gurigoro::Kaiji::TrumpCard.new(
                   suit: 0,
                   number: num
@@ -78,6 +85,52 @@ RSpec.describe 'KaijiServer' do
       end
     ))
     expect(Hand.all.count).to eq 20
+  end
+
+  it 'set first dealers card' do
+    reply = @stub.set_first_dealers_card(Net::Gurigoro::Kaiji::Blackjack::SetFirstDealersCardRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 6
+      )
+    ))
+    expect(Hand.where(
+      hands_id: BlackjackRoom.all.first.dealer_hands_id
+    ).pluck(:suit, :number)).to eq [[0, 6]]
+  end
+
+  it 'hit and bust' do
+    reply = @stub.hit(Net::Gurigoro::Kaiji::Blackjack::HitRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      userId: 1,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 9
+      ),
+      handsIndex: 0
+    ))
+    expect(reply.isBusted).to eq true
+    expect(reply.cardPoints).to eq 22
+    expect(reply.allowedActions.blank?).to eq true
+  end
+
+  it 'hit' do
+    reply = @stub.hit(Net::Gurigoro::Kaiji::Blackjack::HitRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      userId: 2,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 6
+      ),
+      handsIndex: 0
+    ))
+    expect(reply.isBusted).to eq false
+    expect(reply.cardPoints).to eq 19
+    expect(reply.allowedActions.map { |e| @player_action[e] }).to eq [1, 2]
   end
 
   it 'destroy game room' do

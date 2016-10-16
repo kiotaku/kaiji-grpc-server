@@ -30,7 +30,7 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
                                       false)
       end
     end
-    user_actions = BlackjackPlayer.can_user_action?(req.gameRoomId)
+    user_actions = BlackjackPlayer.can_user_first_action?(req.gameRoomId)
     Net::Gurigoro::Kaiji::Blackjack::SetFirstDealedCardsReply.new(
       isSucceed: true,
       actions: user_actions.map do |action|
@@ -51,6 +51,31 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def hit(req, _call)
+    BlackjackPlayer.add_user_hand(
+      req.gameRoomId,
+      req.userId,
+      req.card,
+      !req.handsIndex.zero?
+    )
+    Net::Gurigoro::Kaiji::Blackjack::HitReply.new(
+      isSucceed: true,
+      userId: req.userId,
+      isBusted: BlackjackPlayer.user_hands_busted?(
+        req.gameRoomId,
+        req.userId,
+        !req.handsIndex.zero?
+      ),
+      cardPoints: BlackjackPlayer.user_hands_point(
+        req.gameRoomId,
+        req.userId,
+        !req.handsIndex.zero?
+      ),
+      allowedActions: BlackjackPlayer.can_user_action?(
+        req.gameRoomId,
+        req.userId,
+        !req.handsIndex.zero?
+      )
+    )
   end
 
   def stand(req, _call)

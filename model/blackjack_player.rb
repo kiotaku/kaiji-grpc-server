@@ -34,7 +34,22 @@ class BlackjackPlayer < ActiveRecord::Base
       end
     end
 
-    def can_user_action?(room_id)
+    def user_hands_busted?(room_id, user_id, is_second)
+      player = find_in_room(room_id, user_id)
+      if is_second
+        Hand.busted?(player.hands_id_second)
+      else
+        Hand.busted?(player.hands_id_first)
+      end
+    end
+
+    def user_hands_point(room_id, user_id, is_second)
+      player = find_in_room(room_id, user_id)
+      hands = Hand.hands(is_second ? player.hands_id_second : player.hands_id_first)
+      PointCalculator.blackjack_card_points(hands)
+    end
+
+    def can_user_first_action?(room_id)
       players = BlackjackPlayer.where(blackjack_room_id: room_id)
       players.map do |player|
         first_hands = Hand.hands(player.hands_id_first)
@@ -46,6 +61,18 @@ class BlackjackPlayer < ActiveRecord::Base
         actions.append(4) if can_double_down
         { userId: player.user_id, cardPoints: points, actions: actions }
       end
+    end
+
+    def can_user_action?(room_id, user_id, is_second)
+      return [] if user_hands_busted?(room_id, user_id, is_second)
+      player = find_in_room(room_id, user_id)
+      hands = Hand.hands(is_second ? player.hands_id_second : player.hands_id_first)
+      can_split = ActionChecker.split(hands)
+      can_double_down = ActionChecker.double_down(hands)
+      actions = [1, 2]
+      actions.append(3) if can_split
+      actions.append(4) if can_double_down
+      actions
     end
 
     def remove_players(room_id)
