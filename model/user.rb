@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
     def add_point(id, points)
       user = User.find_by_id(id)
+      return false if user.blank?
       points_balance = user.points
       user.update(points: points_balance + points)
     end
