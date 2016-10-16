@@ -23,6 +23,9 @@
     1. docker container作成後の初期設定用
   1. database-stop.sh
     1. dacker containerの削除用ただしデータは消えない
+  1. database-init-data.sh
+    1. database用docker containerのデータ初期化用
+    1. これを起動した場合database-create.shをもう一度起動する必要がある
 1. server
   1. server-start.sh
     1. server用docker containerの作成用
