@@ -59,6 +59,23 @@ RSpec.describe 'KaijiServer' do
     expect(@bettingResult[reply.result]).to eq 2
   end
 
+  it 'set first dealed cards' do
+    reply = @stub.set_first_dealed_cards(Net::Gurigoro::Kaiji::Blackjack::SetFirstDealedCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      playerCards: (1..10).map { |x| Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
+          userId: x,
+          cards: Net::Gurigoro::Kaiji::TrumpCards.new(
+            cards: [1, 13].map { |x| Net::Gurigoro::Kaiji::TrumpCard.new(
+              suit: 0,
+              number: x
+            ) }
+          )
+        ) }
+    ))
+    expect(Hand.all.count).to eq 20
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomRequest.new(
       accessToken: 'test',

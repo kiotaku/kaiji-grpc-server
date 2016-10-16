@@ -23,16 +23,23 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
 
   def set_first_dealed_cards(req, _call)
     req.playerCards.each do |player_card|
-      BlackjackPlayer.add_user_hand(req.gameRoomId,
-                                    player_card.usersId,
-                                    player_card.cards,
-                                    false)
+      player_card.cards.cards.each do |card|
+        BlackjackPlayer.add_user_hand(req.gameRoomId,
+                                      player_card.userId,
+                                      card,
+                                      false)
+      end
     end
+    user_actions = BlackjackPlayer.can_user_action?(req.gameRoomId)
     Net::Gurigoro::Kaiji::Blackjack::SetFirstDealedCardsReply.new(
       isSucceed: true,
-      actions: Net::Gurigoro::Kaiji::Blackjack::AllowedPlayerActions.new(
-        BlackjackPlayer.can_user_action?
-      )
+      actions: user_actions.map { |action|
+        Net::Gurigoro::Kaiji::Blackjack::AllowedPlayerActions.new(
+          userId: action[:userId],
+          cardPoints: action[:cardPoints],
+          actions: action[:actions]
+        )
+      }
     )
   end
 
