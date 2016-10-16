@@ -189,6 +189,30 @@ RSpec.describe 'KaijiServer' do
     expect(BlackjackPlayer.find_in_room(BlackjackRoom.all.first.id, 9).is_double_down).to eq true
   end
 
+  it 'next dealers card' do
+    reply = @stub.set_next_dealers_card(Net::Gurigoro::Kaiji::Blackjack::SetNextDealersCardRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 8
+      )
+    ))
+    expect(reply.cardPoints).to eq 14
+    expect(reply.shouldHit).to eq true
+    reply = @stub.set_next_dealers_card(Net::Gurigoro::Kaiji::Blackjack::SetNextDealersCardRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      card: Net::Gurigoro::Kaiji::TrumpCard.new(
+        suit: 0,
+        number: 8
+      )
+    ))
+    expect(reply.cardPoints).to eq 22
+    expect(reply.shouldHit).to eq false
+    expect(reply.isBusted).to eq true
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomRequest.new(
       accessToken: 'test',

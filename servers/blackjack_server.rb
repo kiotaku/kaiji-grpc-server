@@ -115,6 +115,16 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def set_next_dealers_card(req, _call)
+    BlackjackRoom.add_dealer_hand(req.gameRoomId, req.card)
+    card_points = PointCalculator.blackjack_card_points(
+      BlackjackRoom.dealer_hands(req.gameRoomId)
+    )
+    Net::Gurigoro::Kaiji::Blackjack::SetNextDealersCardReply.new(
+      isSucceed: true,
+      cardPoints: card_points,
+      shouldHit: ActionChecker.dealer_should_hit?(card_points),
+      isBusted: BlackjackRoom.dealer_hands_busted?(req.gameRoomId)
+    )
   end
 
   def get_game_result(req, _call)

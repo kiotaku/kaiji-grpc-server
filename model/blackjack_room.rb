@@ -22,9 +22,17 @@ class BlackjackRoom < ActiveRecord::Base
 
     def add_dealer_hand(room_id, card)
       Hand.add_hand(
-        BlackjackRoom.find(room_id).dealer_hands_id,
+        BlackjackRoom.find_by_id(room_id).dealer_hands_id,
         card
       )
+    end
+
+    def dealer_hands(room_id)
+      Hand.hands(BlackjackRoom.find_by_id(room_id).dealer_hands_id)
+    end
+
+    def dealer_hands_busted?(room_id)
+      Hand.busted?(BlackjackRoom.find_by_id(room_id).dealer_hands_id)
     end
 
     def destroy_room(room_id)
