@@ -1,0 +1,8 @@
+FROM ruby
+
+COPY . /app/
+
+RUN set -x && \
+    gem install bundler
+
+CMD set -x && cd /app && bundle install && rspec test
