@@ -133,6 +133,19 @@ RSpec.describe 'KaijiServer' do
     expect(reply.allowedActions.map { |e| @player_action[e] }).to eq [1, 2]
   end
 
+  it 'stand' do
+    reply = @stub.stand(Net::Gurigoro::Kaiji::Blackjack::StandRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      userId: 2,
+      handsIndex: 0
+    ))
+    expect(reply.isSucceed).to eq true
+    expect(Hand.is_stand?(
+      BlackjackPlayer.find_in_room(BlackjackRoom.all.first.id, 2).hands_id_first
+    )).to eq true
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Blackjack::DestroyGameRoomRequest.new(
       accessToken: 'test',

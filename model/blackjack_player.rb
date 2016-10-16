@@ -75,6 +75,11 @@ class BlackjackPlayer < ActiveRecord::Base
       actions
     end
 
+    def user_hands_stand(room_id, user_id, is_second)
+      player = find_in_room(room_id, user_id)
+      Hand.stand(is_second ? player.hands_id_second : player.hands_id_first)
+    end
+
     def remove_players(room_id)
       players = BlackjackPlayer.where(blackjack_room_id: room_id)
       players.map do |player|

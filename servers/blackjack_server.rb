@@ -79,6 +79,12 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def stand(req, _call)
+    result = BlackjackPlayer.user_hands_stand(
+      req.gameRoomId,
+      req.userId,
+      !req.handsIndex.zero?
+    )
+    Net::Gurigoro::Kaiji::Blackjack::StandReply.new(isSucceed: !result.zero?)
   end
 
   def split(req, _call)
