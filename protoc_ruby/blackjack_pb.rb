@@ -3,7 +3,7 @@
 
 require 'google/protobuf'
 
-require_relative './trump_pb'
+require 'trump_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.blackjack.CreateNewGameRoomRequest" do
     optional :accessToken, :string, 1
@@ -67,7 +67,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :userId, :int64, 2
     optional :isBusted, :bool, 3
     optional :cardPoints, :int64, 4
-    repeated :allwedActions, :enum, 5, "net.gurigoro.kaiji.blackjack.PlayerAction"
+    repeated :allowedActions, :enum, 5, "net.gurigoro.kaiji.blackjack.PlayerAction"
   end
   add_message "net.gurigoro.kaiji.blackjack.StandRequest" do
     optional :accessToken, :string, 1
