@@ -28,7 +28,7 @@ class KaijiServer < Net::Gurigoro::Kaiji::Kaiji::Service
   end
 
   def get_user_by_id(req, _call)
-    user_model_convert_to_get_user_reply(User.where(id: req.userId))
+    user_model_convert_to_get_user_reply(User.find_by_id(req.userId))
   end
 
   def add_user(req, _call)
@@ -52,12 +52,19 @@ class KaijiServer < Net::Gurigoro::Kaiji::Kaiji::Service
   private
 
   def user_model_convert_to_get_user_reply(user)
-    Net::Gurigoro::Kaiji::GetUserReply.new(isFound: false) if user.present?
-    Net::Gurigoro::Kaiji::GetUserReply.new(
-      isFound: true,
-      userId: user.id, name: user.name, point: user.points,
-      isAvailable: user.is_available, isAnonymous: user.is_anonymous,
-      continue_count: user.continue_count
-    )
+    if user.blank?
+      Net::Gurigoro::Kaiji::GetUserReply.new(
+        isFound: false,
+        userId: 0, name: '', point: 0,
+        isAvailable: false, isAnonymous: false, continueCount: 0
+      )
+    else
+      Net::Gurigoro::Kaiji::GetUserReply.new(
+        isFound: true,
+        userId: user.id, name: user.name, point: user.points,
+        isAvailable: user.is_available, isAnonymous: user.is_anonymous,
+        continueCount: user.continue_count
+      )
+    end
   end
 end

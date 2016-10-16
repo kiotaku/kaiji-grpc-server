@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration
   def up
-    create_table :users, id: false do |t|
+    create_table :users, id: false, primary_key: :id do |t|
       t.integer :id, null: false, unique: true
       t.string :name, default: 'anonymous'
       t.integer :points, default: 10_000, null: false

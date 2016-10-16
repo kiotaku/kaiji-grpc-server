@@ -1,13 +1,29 @@
+require 'yaml'
 require 'grpc'
+require 'active_record'
+require 'logger'
+@logger = Logger.new './log/grpc.log'
+
+dbconfig = YAML.load_file './config/database.yml'
+ActiveRecord::Base.establish_connection dbconfig['db']['development']
+ActiveRecord::Base.logger = Logger.new './log/database.log'
+
+require_relative './model/user'
+require_relative './model/hand'
+require_relative './model/blackjack_room'
+
+require_relative './calculator/point_calculator'
+require_relative './calculator/action_checker'
+
 require_relative './servers/blackjack_server'
 require_relative './servers/kaiji_server'
 require_relative './servers/point_server'
 
 def main
   server = GRPC::RpcServer.new
-  server.add_http2_port('0.0.0.0:11111')
-  server.handle(BlackJackServer)
-  server.handle(KaijiServer)
+  server.add_http2_port('0.0.0.0:1257', :this_port_is_insecure)
+  server.handle(BlackjackServer)
+  server.handle(KaijiServer.new(@logger))
   server.handle(PointServer)
   server.run
 end
