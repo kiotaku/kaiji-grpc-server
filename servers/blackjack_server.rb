@@ -88,6 +88,8 @@ class BlackjackServer < Net::Gurigoro::Kaiji::Blackjack::BlackJack::Service
   end
 
   def split(req, _call)
+    result = BlackjackPlayer.user_hands_split(req.gameRoomId, req.userId)
+    Net::Gurigoro::Kaiji::Blackjack::SplitReply.new(isSucceed: result)
   end
 
   def double_down(req, _call)

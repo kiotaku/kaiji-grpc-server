@@ -80,6 +80,27 @@ class BlackjackPlayer < ActiveRecord::Base
       Hand.stand(is_second ? player.hands_id_second : player.hands_id_first)
     end
 
+    def user_hands_split(room_id, user_id)
+      player = find_in_room(room_id, user_id)
+      return false unless bet_points_twice(player)
+      player.update(hands_id_second: SecureRandom.hex(16), is_split: true)
+      Hand.where(hands_id: player.hands_id_first).first.update(hands_id: player.hands_id_second)
+    end
+
+    def user_hands_split?(room_id, user_id)
+      find_in_room(room_id, user_id).is_split
+    end
+
+    def bet_points_twice(player)
+      bet_points = player.bet_points
+      if User.has_points?(player.user_id, bet_points)
+        User.reduce_point(player.user_id, bet_points)
+        player.update(bet_points: bet_points * 2)
+      else
+        false
+      end
+    end
+
     def remove_players(room_id)
       players = BlackjackPlayer.where(blackjack_room_id: room_id)
       players.map do |player|

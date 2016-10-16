@@ -71,17 +71,31 @@ RSpec.describe 'KaijiServer' do
       accessToken: 'test',
       gameRoomId: BlackjackRoom.all.first.id,
       playerCards: (1..10).map do |x|
-        Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
-          userId: x,
-          cards: Net::Gurigoro::Kaiji::TrumpCards.new(
-            cards: [3, 13].map do |num|
-              Net::Gurigoro::Kaiji::TrumpCard.new(
-                  suit: 0,
-                  number: num
-              )
-            end
+        if x != 10
+          Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
+            userId: x,
+            cards: Net::Gurigoro::Kaiji::TrumpCards.new(
+              cards: [3, 13].map do |num|
+                Net::Gurigoro::Kaiji::TrumpCard.new(
+                    suit: 0,
+                    number: num
+                )
+              end
+            )
           )
-        )
+        else
+          Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
+            userId: x,
+            cards: Net::Gurigoro::Kaiji::TrumpCards.new(
+              cards: [2, 2].map do |num|
+                Net::Gurigoro::Kaiji::TrumpCard.new(
+                    suit: 0,
+                    number: num
+                )
+              end
+            )
+          )
+        end
       end
     ))
     expect(Hand.all.count).to eq 20
@@ -144,6 +158,16 @@ RSpec.describe 'KaijiServer' do
     expect(Hand.is_stand?(
       BlackjackPlayer.find_in_room(BlackjackRoom.all.first.id, 2).hands_id_first
     )).to eq true
+  end
+
+  it 'split' do
+    reply = @stub.split(Net::Gurigoro::Kaiji::Blackjack::SplitRequest.new(
+      accessToken: 'test',
+      gameRoomId: BlackjackRoom.all.first.id,
+      userId: 10
+    ))
+    expect(reply.isSucceed).to eq true
+    expect(BlackjackPlayer.user_hands_split?(BlackjackRoom.all.first.id, 10)).to eq true
   end
 
   it 'destroy game room' do
