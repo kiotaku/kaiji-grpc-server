@@ -3,7 +3,7 @@
 
 require 'google/protobuf'
 
-require 'trump_pb'
+require_relative './trump_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.poker.CreateNewGameRoomRequest" do
     optional :accessToken, :string, 1
