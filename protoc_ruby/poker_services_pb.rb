@@ -18,7 +18,6 @@ module Net
             self.service_name = 'net.gurigoro.kaiji.poker.Poker'
 
             rpc :CreateNewGameRoom, CreateNewGameRoomRequest, CreateNewGameRoomReply
-            rpc :Bet, BetRequest, BetReply
             rpc :Call, CallRequest, CallReply
             rpc :Raise, RaiseRequest, RaiseReply
             rpc :Check, CheckRequest, CheckReply

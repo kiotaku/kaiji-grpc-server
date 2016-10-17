@@ -3,7 +3,7 @@
 
 require 'google/protobuf'
 
-require_relative './trump_pb'
+require_relative 'trump_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.poker.CreateNewGameRoomRequest" do
     optional :accessToken, :string, 1
@@ -12,17 +12,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.poker.CreateNewGameRoomReply" do
     optional :isSucceed, :bool, 1
     optional :gameRoomId, :int64, 2
-  end
-  add_message "net.gurigoro.kaiji.poker.BetRequest" do
-    optional :accessToken, :string, 1
-    optional :gameRoomId, :int64, 2
-    optional :userId, :int64, 3
-    optional :betPoints, :int64, 4
-  end
-  add_message "net.gurigoro.kaiji.poker.BetReply" do
-    optional :result, :enum, 1, "net.gurigoro.kaiji.poker.BettingResult"
-    optional :userId, :int64, 2
-    repeated :nextPlayersAvailableActions, :enum, 3, "net.gurigoro.kaiji.poker.PlayerAction"
   end
   add_message "net.gurigoro.kaiji.poker.CallRequest" do
     optional :accessToken, :string, 1
@@ -102,7 +91,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_enum "net.gurigoro.kaiji.poker.PlayerAction" do
     value :NONE, 0
-    value :BET, 1
     value :CALL, 2
     value :RAISE, 3
     value :CHECK, 4
@@ -136,8 +124,6 @@ module Net
       module Poker
         CreateNewGameRoomRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.CreateNewGameRoomRequest").msgclass
         CreateNewGameRoomReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.CreateNewGameRoomReply").msgclass
-        BetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.BetRequest").msgclass
-        BetReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.BetReply").msgclass
         CallRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.CallRequest").msgclass
         CallReply = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.CallReply").msgclass
         RaiseRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("net.gurigoro.kaiji.poker.RaiseRequest").msgclass
