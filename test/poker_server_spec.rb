@@ -74,6 +74,289 @@ RSpec.describe 'PokerServer' do
     expect(User.where(id: 10).first.points).to eq 9_800
   end
 
+  it 'set players cards' do
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 1,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 3
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 7
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :HIGH_CARDS
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 2,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 7
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :ONE_PAIR
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 3,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :TWO_PAIRS
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 4,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 7
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :THREE_OF_A_KIND
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 5,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 2
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 3
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 4
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 6
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :STRAIGHT
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 6,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 3
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 7
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :FLUSH
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 7,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 7
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 7
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :FULL_HOUSE
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 8,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 1,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 2,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 3,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 9
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :FOUR_OF_A_KIND
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 9,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 2
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 3
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 4
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 5
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 6
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :STRAIGHT_FLUSH
+    reply = @stub.set_players_cards(Net::Gurigoro::Kaiji::Poker::SetPlayersCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 10,
+      playerCards: Net::Gurigoro::Kaiji::TrumpCards.new(
+        cards: [Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 1
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 13
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 12
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 11
+        ),
+        Net::Gurigoro::Kaiji::TrumpCard.new(
+          suit: 0,
+          number: 10
+        )]
+      )
+    ))
+    expect(reply.hand).to eq :ROYAL_STRAIGHT_FLUSH
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Poker::DestroyGameRoomRequest.new(
       accessToken: 'test',

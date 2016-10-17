@@ -44,6 +44,17 @@ class PokerPlayer < ActiveRecord::Base
       find_in_room(room_id, user_id).is_fold
     end
 
+    def set_hands(room_id, user_id, cards)
+      player = find_in_room(room_id, user_id)
+      cards.each do |card|
+        Hand.add_hand(player.hands_id, card)
+      end
+    end
+
+    def user_role(room_id, user_id)
+      Hand.role(find_in_room(room_id, user_id).hands_id)
+    end
+
     def difference_max_bet(room_id, user_id)
       PokerRoom.player_max_bet(room_id) - find_in_room(room_id, user_id).bet_points
     end

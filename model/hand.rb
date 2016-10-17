@@ -20,6 +20,10 @@ class Hand < ActiveRecord::Base
       )
     end
 
+    def role(hands_id)
+      PointCalculator.poker_hands_role(Hand.hands(hands_id))
+    end
+
     def busted?(hands_id)
       PointCalculator.blackjack_card_points(hands(hands_id)) > 21
     end

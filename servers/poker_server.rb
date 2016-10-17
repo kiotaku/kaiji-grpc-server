@@ -45,6 +45,12 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
   end
 
   def set_players_cards(req, _call)
+    PokerPlayer.set_hands(req.gameRoomId, req.userId, req.playerCards.cards)
+    Net::Gurigoro::Kaiji::Poker::SetPlayersCardsReply.new(
+      isSucceed: true,
+      userId: req.userId,
+      hand: PokerPlayer.user_role(req.gameRoomId, req.userId)
+    )
   end
 
   def get_game_result(req, _call)
