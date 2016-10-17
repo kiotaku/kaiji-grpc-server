@@ -9,5 +9,11 @@ class PokerRoom < ActiveRecord::Base
       PokerPlayer.add_players(room.id, user_ids)
       room
     end
+
+    def destroy_room(room_id)
+      room = PokerRoom.find_by_id(room_id)
+      PokerPlayer.remove_players(room.id)
+      room.destroy
+    end
   end
 end

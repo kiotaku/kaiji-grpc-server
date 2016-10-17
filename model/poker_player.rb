@@ -11,5 +11,13 @@ class PokerPlayer < ActiveRecord::Base
         )
       end
     end
+
+    def remove_players(room_id)
+      players = PokerPlayer.where(poker_room_id: room_id)
+      players.map do |player|
+        Hand.delete_hands(player.hands_id)
+      end
+      players.destroy_all
+    end
   end
 end

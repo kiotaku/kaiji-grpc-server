@@ -2,6 +2,16 @@ require_relative './../protoc_ruby/poker_services_pb'
 
 class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
   def create_new_game_room(req, _call)
+    begin
+      room = PokerRoom.create_room(req.usersId)
+    rescue
+      Net::Gurigoro::Kaiji::Poker::CreateNewGameRoomReply.new(isSucceed: false)
+    else
+      Net::Gurigoro::Kaiji::Poker::CreateNewGameRoomReply.new(
+        isSucceed: true,
+        gameRoomId: room.id
+      )
+    end
   end
 
   def bet(req, _call)
@@ -26,5 +36,12 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
   end
 
   def destroy_game_room(req, _call)
+    begin
+      PokerRoom.destroy_room(req.gameRoomId)
+    rescue
+      Net::Gurigoro::Kaiji::Poker::DestroyGameRoomReply.new(isSucceed: false)
+    else
+      Net::Gurigoro::Kaiji::Poker::DestroyGameRoomReply.new(isSucceed: true)
+    end
   end
 end
