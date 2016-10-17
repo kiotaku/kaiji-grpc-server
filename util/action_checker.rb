@@ -1,11 +1,11 @@
 class ActionChecker
   class << self
-    def split(hands)
-      hands.length == 2 && hands[0] == hands[1]
+    def split(hands, user_id, bet_points)
+      hands.length == 2 && hands[0] == hands[1] && User.has_points?(user_id, bet_points)
     end
 
-    def double_down(hands)
-      hands.length == 2
+    def double_down(hands, user_id, bet_points)
+      hands.length == 2 && User.has_points?(user_id, bet_points)
     end
 
     def dealer_should_hit?(card_points)

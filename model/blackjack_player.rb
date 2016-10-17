@@ -49,8 +49,8 @@ class BlackjackPlayer < ActiveRecord::Base
       players.map do |player|
         first_hands = Hand.hands(player.hands_id_first)
         points = PointCalculator.blackjack_card_points(first_hands)
-        can_split = ActionChecker.split(first_hands)
-        can_double_down = ActionChecker.double_down(first_hands)
+        can_split = ActionChecker.split(first_hands, player.user_id, player.bet_points)
+        can_double_down = ActionChecker.double_down(first_hands, player.user_id, player.bet_points)
         actions = [1, 2]
         actions.append(3) if can_split
         actions.append(4) if can_double_down
@@ -62,8 +62,8 @@ class BlackjackPlayer < ActiveRecord::Base
       return [] if user_hands_busted?(room_id, user_id, is_second)
       player = find_in_room(room_id, user_id)
       hands = Hand.hands(is_second ? player.hands_id_second : player.hands_id_first)
-      can_split = ActionChecker.split(hands)
-      can_double_down = ActionChecker.double_down(hands)
+      can_split = ActionChecker.split(hands, player.user_id, player.bet_points)
+      can_double_down = ActionChecker.double_down(hands, player.user_id, player.bet_points)
       actions = [1, 2]
       actions.append(3) if can_split
       actions.append(4) if can_double_down
