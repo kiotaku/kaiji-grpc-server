@@ -63,6 +63,17 @@ RSpec.describe 'PokerServer' do
     end
   end
 
+  it 'fold' do
+    reply = @stub.fold(Net::Gurigoro::Kaiji::Poker::FoldRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 10
+    ))
+    expect(reply.isSucceed).to eq true
+    expect(reply.nextPlayersAvailableActions).to eq [:OPEN_CARDS]
+    expect(User.where(id: 10).first.points).to eq 9_800
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Poker::DestroyGameRoomRequest.new(
       accessToken: 'test',

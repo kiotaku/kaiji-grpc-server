@@ -36,6 +36,12 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
   end
 
   def fold(req, _call)
+    result = PokerPlayer.fold(req.gameRoomId, req.userId)
+    Net::Gurigoro::Kaiji::Poker::FoldReply.new(
+      isSucceed: result,
+      userId: req.userId,
+      nextPlayersAvailableActions: ActionChecker.poker_available_action(req.gameRoomId, req.userId)
+    )
   end
 
   def set_players_cards(req, _call)

@@ -14,11 +14,13 @@ class ActionChecker
 
     def poker_available_action(room_id, user_id)
       actions = []
-      if User.has_points?(user_id, PokerPlayer.difference_max_bet(room_id, user_id))
-        actions.push(2)
-        actions.push(3)
+      unless PokerPlayer.fold?(room_id, user_id)
+        if User.has_points?(user_id, PokerPlayer.difference_max_bet(room_id, user_id))
+          actions.push(2)
+          actions.push(3)
+        end
+        actions.push(5)
       end
-      actions.push(5)
       actions.push(6)
       actions
     end
