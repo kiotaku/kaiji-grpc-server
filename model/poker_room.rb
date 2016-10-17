@@ -10,6 +10,12 @@ class PokerRoom < ActiveRecord::Base
       room
     end
 
+    def player_max_bet(room_id)
+      players = PokerPlayer.where(poker_room_id: room_id)
+      bet_points_list = players.map { |player| player.bet_points }
+      bet_points_list.max
+    end
+
     def destroy_room(room_id)
       room = PokerRoom.find_by_id(room_id)
       PokerPlayer.remove_players(room.id)

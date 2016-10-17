@@ -10,12 +10,44 @@ RSpec.describe 'PokerServer' do
   end
 
   it 'create new game room' do
-    reply = @stub.create_new_game_room(Net::Gurigoro::Kaiji::Blackjack::CreateNewGameRoomRequest.new(
+    reply = @stub.create_new_game_room(Net::Gurigoro::Kaiji::Poker::CreateNewGameRoomRequest.new(
       accessToken: 'test',
       usersId: (1..10).map { |x| x }
     ))
     expect(reply.isSucceed).to eq true
     expect(PokerRoom.find_by_id(reply.gameRoomId).nil?).to eq false
+  end
+
+  it 'raise' do
+    reply = @stub.raise(Net::Gurigoro::Kaiji::Poker::RaiseRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 1,
+      betPoints: 200
+    ))
+    expect(reply.result).to eq :SUCCEED
+    expect(reply.userId).to eq 1
+    expect(reply.nextPlayersAvailableActions).to eq [:CALL, :RAISE, :FOLD, :OPEN_CARDS]
+
+    reply = @stub.raise(Net::Gurigoro::Kaiji::Poker::RaiseRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 2,
+      betPoints: 1000000
+    ))
+    expect(reply.result).to eq :NO_ENOUGH_POINTS
+    expect(reply.userId).to eq 2
+    expect(reply.nextPlayersAvailableActions).to eq [:CALL, :RAISE, :FOLD, :OPEN_CARDS]
+    
+    reply = @stub.raise(Net::Gurigoro::Kaiji::Poker::RaiseRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id,
+      userId: 3,
+      betPoints: 100
+    ))
+    expect(reply.result).to eq :NOT_ENOUGH_TO_RAISE
+    expect(reply.userId).to eq 3
+    expect(reply.nextPlayersAvailableActions).to eq [:CALL, :RAISE, :FOLD, :OPEN_CARDS]
   end
 
   it 'destroy game room' do

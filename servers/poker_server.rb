@@ -14,13 +14,16 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
     end
   end
 
-  def bet(req, _call)
-  end
-
   def call(req, _call)
   end
 
   def raise(req, _call)
+    result = PokerPlayer.raise(req.gameRoomId, req.userId, req.betPoints)
+    Net::Gurigoro::Kaiji::Poker::RaiseReply.new(
+      result: result,
+      userId: req.userId,
+      nextPlayersAvailableActions: ActionChecker.poker_available_action(req.gameRoomId, req.userId)
+    )
   end
 
   def check(req, _call)
