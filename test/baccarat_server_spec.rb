@@ -12,6 +12,7 @@ RSpec.describe 'BaccaratServer' do
       BANKER: 1,
       TIE: 2
     }
+    @won_side = 0
   end
 
   it 'create new game room' do
@@ -66,6 +67,29 @@ RSpec.describe 'BaccaratServer' do
     ))
     expect(reply.result).to eq :SUCCEED
     @won_side = @bet_side[reply.wonSide]
+  end
+
+  it 'get game result' do
+    game_results = {
+      0 => :LOSE,
+      1 => :WIN,
+      2 => :WIN_WITH_BETTING_TIE
+    }
+    reply = @stub.get_game_result(Net::Gurigoro::Kaiji::Baccarat::GetGameResultRequest.new(
+      accessToken: 'test',
+      gameRoomId: BaccaratRoom.all.first.id
+    ))
+    expect(reply.result).to eq :SUCCEED
+    reply.playerResults.each do |result|
+      id = result.userId
+      game_result = id % 3 == @won_side ? 1 : @won_side == 2 ? 2 : 0
+      expect(result.gameResult).to eq game_results[game_result]
+      got_points = 0 if game_result.zero?
+      got_points = 1000 if game_result == 2
+      got_points = 2000 if game_result == 1
+      got_points = 10_000 if game_result == 1 && id % 3 == 2
+      expect(result.gotPoints).to eq got_points
+    end
   end
 
   it 'destroy game room' do

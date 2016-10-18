@@ -19,6 +19,7 @@ class BaccaratPlayer < ActiveRecord::Base
     def bet(room_id, user_id, bet_points, bet_side)
       return 1 unless User.has_points?(user_id, bet_points)
       find_in_room(room_id, user_id).update(bet_points: bet_points, bet_side: @bet_side[bet_side])
+      User.reduce_point(user_id, bet_points)
       0
     end
 

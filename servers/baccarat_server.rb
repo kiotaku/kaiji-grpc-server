@@ -26,11 +26,18 @@ class BaccaratServer < Net::Gurigoro::Kaiji::Baccarat::Baccarat::Service
     result = BaccaratRoom.start_opening_cards(req.gameRoomId)
     Net::Gurigoro::Kaiji::Baccarat::StartOpeningCardsReply.new(
       result: result,
-      wonSide: BaccaratRoom.find_by_id(req.gameRoomId).result
+      wonSide: BaccaratRoom.find_by_id(req.gameRoomId).result % 3
     )
   end
 
   def get_game_result(req, _call)
+    results = BaccaratRoom.game_results(req.gameRoomId)
+    Net::Gurigoro::Kaiji::Baccarat::GetGameResultReply.new(
+      result: results[:result],
+      playerResults: results[:playerResults].map do |result|
+        Net::Gurigoro::Kaiji::Baccarat::PlayerResult.new(result)
+      end
+    )
   end
 
   def destroy_game_room(req, _call)
