@@ -19,6 +19,7 @@ require_relative './model/baccarat_player'
 
 require_relative './util/point_calculator'
 require_relative './util/action_checker'
+require_relative './util/baccarat'
 
 require_relative './servers/blackjack_server'
 require_relative './servers/kaiji_server'

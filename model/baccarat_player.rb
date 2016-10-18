@@ -22,6 +22,14 @@ class BaccaratPlayer < ActiveRecord::Base
       0
     end
 
+    def all_user_betted?(room_id)
+      state = true
+      BaccaratPlayer.where(baccarat_room_id: room_id).each do |player|
+        state &&= !player.bet_points.zero?
+      end
+      state
+    end
+
     def remove_players(room_id)
       BaccaratPlayer.where(baccarat_room_id: room_id).destroy_all
     end

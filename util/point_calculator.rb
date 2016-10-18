@@ -140,5 +140,16 @@ class PointCalculator
       end
       0
     end
+
+    def baccarat_hands_point(hands)
+      points = hands.map do |hand|
+        if hand[:number] >= 10 then 0
+        else hand[:number]
+        end
+      end
+      points = points.sum
+      return points % 10 if points > 9
+      points
+    end
   end
 end

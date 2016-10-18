@@ -1,7 +1,7 @@
 class CreateBaccaratRooms < ActiveRecord::Migration
   def up
     create_table :baccarat_rooms do |t|
-      t.integer :result, default: 4, null: false
+      t.integer :result, default: 0, null: false
     end
   end
 

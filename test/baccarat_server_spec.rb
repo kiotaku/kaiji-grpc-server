@@ -7,6 +7,11 @@ RSpec.describe 'BaccaratServer' do
     (1..10).map do |x|
       User.create(id: x)
     end
+    @bet_side = {
+      PLAYER: 0,
+      BANKER: 1,
+      TIE: 2
+    }
   end
 
   it 'create new game room' do
@@ -28,7 +33,7 @@ RSpec.describe 'BaccaratServer' do
     ))
     expect(reply.result).to eq :NO_ENOUGH_POINTS
 
-    (1..10).each do |x|
+    (1..9).each do |x|
       reply = @stub.bet(Net::Gurigoro::Kaiji::Baccarat::BetRequest.new(
         accessToken: 'test',
         gameRoomId: BaccaratRoom.all.first.id,
@@ -38,6 +43,29 @@ RSpec.describe 'BaccaratServer' do
       ))
       expect(reply.result).to eq :SUCCEED
     end
+  end
+
+  it 'start opening cards' do
+    reply = @stub.start_opening_cards(Net::Gurigoro::Kaiji::Baccarat::StartOpeningCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: BaccaratRoom.all.first.id
+    ))
+    expect(reply.result).to eq :NOT_ALL_USERS_BETTED_YET
+
+    @stub.bet(Net::Gurigoro::Kaiji::Baccarat::BetRequest.new(
+      accessToken: 'test',
+      gameRoomId: BaccaratRoom.all.first.id,
+      userId: 10,
+      betPoints: 1000,
+      bettingSide: 10 % 3
+    ))
+
+    reply = @stub.start_opening_cards(Net::Gurigoro::Kaiji::Baccarat::StartOpeningCardsRequest.new(
+      accessToken: 'test',
+      gameRoomId: BaccaratRoom.all.first.id
+    ))
+    expect(reply.result).to eq :SUCCEED
+    @won_side = @bet_side[reply.wonSide]
   end
 
   it 'destroy game room' do
