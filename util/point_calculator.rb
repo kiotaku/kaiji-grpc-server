@@ -93,5 +93,52 @@ class PointCalculator
       end
       state
     end
+
+    def poker_game_result(room_id, user_id)
+      point = PokerPlayer.user_card_point(room_id, user_id)
+      max_point = PokerRoom.player_max_card_ponit(room_id, user_id)
+      if point < max_point
+        0
+      elsif point == max_point
+        second_point = PokerPlayer.user_card_point_second(room_id, user_id)
+        max_second_point = PokerRoom.player_max_card_ponit_second(room_id, user_id)
+        if second_point < max_second_point
+          return 0
+        elsif second_point > max_second_point
+          return 2
+        else
+          return 1
+        end
+      else
+        2
+      end
+    end
+
+    def poker_win_point(hands_id, bet_points)
+      role = Hand.role(hands_id)
+      case role
+      when 10
+        return bet_points * 100
+      when 9
+        return bet_points * 20
+      when 8
+        return bet_points * 15
+      when 7
+        return bet_points * 10
+      when 6
+        return bet_points * 7
+      when 5
+        return bet_points * 6
+      when 4
+        return bet_points * 5
+      when 3
+        return bet_points * 4
+      when 2
+        return bet_points * 3
+      when 1
+        return bet_points * 2
+      end
+      0
+    end
   end
 end

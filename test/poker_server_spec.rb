@@ -357,6 +357,34 @@ RSpec.describe 'PokerServer' do
     expect(reply.hand).to eq :ROYAL_STRAIGHT_FLUSH
   end
 
+  it 'get game result' do
+    reply = @stub.get_game_result(Net::Gurigoro::Kaiji::Poker::GetGameResultRequest.new(
+      accessToken: 'test',
+      gameRoomId: PokerRoom.all.first.id
+    ))
+    reply.playerResults.sort_by! { |item| item.userId }
+    expect(reply.playerResults[0].gameResult).to eq :LOSE
+    expect(reply.playerResults[0].gotPoints).to eq 0
+    expect(reply.playerResults[1].gameResult).to eq :LOSE
+    expect(reply.playerResults[1].gotPoints).to eq 0
+    expect(reply.playerResults[2].gameResult).to eq :LOSE
+    expect(reply.playerResults[2].gotPoints).to eq 0
+    expect(reply.playerResults[3].gameResult).to eq :LOSE
+    expect(reply.playerResults[3].gotPoints).to eq 0
+    expect(reply.playerResults[4].gameResult).to eq :LOSE
+    expect(reply.playerResults[4].gotPoints).to eq 0
+    expect(reply.playerResults[5].gameResult).to eq :LOSE
+    expect(reply.playerResults[5].gotPoints).to eq 0
+    expect(reply.playerResults[6].gameResult).to eq :LOSE
+    expect(reply.playerResults[6].gotPoints).to eq 0
+    expect(reply.playerResults[7].gameResult).to eq :LOSE
+    expect(reply.playerResults[7].gotPoints).to eq 0
+    expect(reply.playerResults[8].gameResult).to eq :WIN
+    expect(reply.playerResults[8].gotPoints).to eq 4000
+    expect(reply.playerResults[9].gameResult).to eq :LOSE
+    expect(reply.playerResults[9].gotPoints).to eq 0
+  end
+
   it 'destroy game room' do
     reply = @stub.destroy_game_room(Net::Gurigoro::Kaiji::Poker::DestroyGameRoomRequest.new(
       accessToken: 'test',
