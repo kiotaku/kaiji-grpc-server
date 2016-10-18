@@ -14,6 +14,8 @@ require_relative './model/blackjack_room'
 require_relative './model/blackjack_player'
 require_relative './model/poker_room'
 require_relative './model/poker_player'
+require_relative './model/baccarat_room'
+require_relative './model/baccarat_player'
 
 require_relative './util/point_calculator'
 require_relative './util/action_checker'
@@ -22,6 +24,7 @@ require_relative './servers/blackjack_server'
 require_relative './servers/kaiji_server'
 require_relative './servers/point_server'
 require_relative './servers/poker_server'
+require_relative './servers/baccarat_server'
 
 def main
   server = GRPC::RpcServer.new
@@ -30,6 +33,7 @@ def main
   server.handle(KaijiServer.new(@logger))
   server.handle(PointServer)
   server.handle(PokerServer)
+  server.handle(BaccaratServer)
   server.run
 end
 
