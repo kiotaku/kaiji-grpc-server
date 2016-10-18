@@ -16,6 +16,15 @@ class BaccaratServer < Net::Gurigoro::Kaiji::Baccarat::Baccarat::Service
   end
 
   def bet(req, _call)
+    begin
+    result = BaccaratPlayer.bet(req.gameRoomId, req.userId, req.betPoints, req.bettingSide)
+    Net::Gurigoro::Kaiji::Baccarat::BetReply.new(
+      result: result,
+      userId: req.userId
+    )
+  rescue => e
+    p e
+  end
   end
 
   def start_opening_cards(req, _call)
