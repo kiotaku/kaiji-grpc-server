@@ -1,0 +1,1 @@
+docker stop http-server

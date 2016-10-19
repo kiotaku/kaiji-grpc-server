@@ -5,4 +5,4 @@ COPY . /app/
 RUN set -x && \
     gem install bundler
 
-CMD set -x && cd /app && bundle install --without test && bundle exec rake migrate && ruby /app/main.rb
+CMD set -x && cd /app && bundle install --without test --without http && bundle exec rake migrate && ruby /app/main.rb
