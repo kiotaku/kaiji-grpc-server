@@ -1,7 +1,7 @@
 require_relative './../protoc_ruby/blackjack_services_pb'
 require_relative './database'
 
-RSpec.describe 'KaijiServer' do
+RSpec.describe 'BlackjackServer' do
   before :all do
     @stub = Net::Gurigoro::Kaiji::Blackjack::BlackJack::Stub.new('game-server:1257', :this_channel_is_insecure)
     (1..10).map do |x|
@@ -71,11 +71,23 @@ RSpec.describe 'KaijiServer' do
       accessToken: 'test',
       gameRoomId: BlackjackRoom.all.first.id,
       playerCards: (1..10).map do |x|
-        if x != 10
+        if x == 10
           Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
             userId: x,
             cards: Net::Gurigoro::Kaiji::TrumpCards.new(
-              cards: [3, 13].map do |num|
+              cards: [2, 2].map do |num|
+                Net::Gurigoro::Kaiji::TrumpCard.new(
+                    suit: 0,
+                    number: num
+                )
+              end
+            )
+          )
+        elsif x == 8
+          Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
+            userId: x,
+            cards: Net::Gurigoro::Kaiji::TrumpCards.new(
+              cards: [1, 13].map do |num|
                 Net::Gurigoro::Kaiji::TrumpCard.new(
                     suit: 0,
                     number: num
@@ -87,7 +99,7 @@ RSpec.describe 'KaijiServer' do
           Net::Gurigoro::Kaiji::Blackjack::FirstDealPlayerCards.new(
             userId: x,
             cards: Net::Gurigoro::Kaiji::TrumpCards.new(
-              cards: [2, 2].map do |num|
+              cards: [3, 13].map do |num|
                 Net::Gurigoro::Kaiji::TrumpCard.new(
                     suit: 0,
                     number: num
@@ -221,7 +233,8 @@ RSpec.describe 'KaijiServer' do
     expect(reply.playerResults[0].gameResult).to eq :LOSE
     expect(User.find_by_id(1).points).to eq 9_900
     expect(User.find_by_id(2).points).to eq 10_100
-    expect(User.find_by_id(9).points).to eq 10_400
+    expect(User.find_by_id(8).points).to eq 10_200
+    expect(User.find_by_id(9).points).to eq 10_200
     expect(User.find_by_id(10).points).to eq 10_200
   end
 

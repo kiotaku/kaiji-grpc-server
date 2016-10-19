@@ -98,7 +98,7 @@ class BlackjackPlayer < ActiveRecord::Base
       end
     end
 
-    def user_game_result(room_id, dealer_points)
+    def user_game_result(room_id, dealer_hands)
       players = BlackjackPlayer.where(blackjack_room_id: room_id)
       players.map do |player|
         results = []
@@ -106,20 +106,20 @@ class BlackjackPlayer < ActiveRecord::Base
           results.push PointCalculator.blackjack_game_points(
             player.user_id,
             player.hands_id_first,
-            dealer_points,
+            dealer_hands,
             player.bet_points
           )
           results.push PointCalculator.blackjack_game_points(
             player.user_id,
             player.hands_id_second,
-            dealer_points,
+            dealer_hands,
             player.bet_points
           )
         else
           results.push PointCalculator.blackjack_game_points(
             player.user_id,
             player.hands_id_first,
-            dealer_points,
+            dealer_hands,
             player.bet_points * 2
           )
         end

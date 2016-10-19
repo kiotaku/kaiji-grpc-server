@@ -36,8 +36,7 @@ class BlackjackRoom < ActiveRecord::Base
     end
 
     def result_room(room_id)
-      dealer_card_points = PointCalculator.blackjack_card_points(dealer_hands(room_id))
-      BlackjackPlayer.user_game_result(room_id, dealer_card_points)
+      BlackjackPlayer.user_game_result(room_id, dealer_hands(room_id))
     end
 
     def destroy_room(room_id)

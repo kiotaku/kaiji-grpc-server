@@ -22,33 +22,39 @@ class PointCalculator
       points
     end
 
-    def blackjack_game_points(user_id, hands_id, dealer_points, bet_points)
+    def blackjack_game_points(user_id, hands_id, dealer_hands, bet_points)
       if !Hand.busted?(hands_id)
-        player_points = PointCalculator.blackjack_card_points(
-          Hand.hands(hands_id)
-        )
-        blackjack_game_result(user_id, player_points, dealer_points, bet_points)
+        blackjack_game_result(user_id, Hand.hands(hands_id), dealer_hands, bet_points)
       else
         { userId: user_id, gameResult: 0, gotPoints: 0 }
       end
     end
 
-    def blackjack_game_result(user_id, player_points, dealer_points, bet_points)
-      bet_points *= 1.5 if player_points == 21
-      if dealer_points < 21
-        if player_point < dealer_points
-          { userId: user_id, gameResult: 0, gotPoints: 0 }
-        elsif player_point > dealer_points
-          User.add_point(user_id, bet_points)
-          { userId: user_id, gameResult: 2, gotPoints: bet_points }
-        else
-          User.add_point(user_id, bet_points / 2)
-          { userId: user_id, gameResult: 1, gotPoints: bet_points / 2 }
-        end
-      else
+    def blackjack_game_result(user_id, player_hands, dealer_hands, bet_points)
+      player_points = blackjack_card_points(player_hands)
+      dealer_points = blackjack_card_points(dealer_hands)
+      case compare_point_and_hands(player_points, player_hands, dealer_points, dealer_hands)
+      when :LOSE
+        { userId: user_id, gameResult: 0, gotPoints: 0 }
+      when :TIE
+        User.add_point(user_id, bet_points / 2)
+        { userId: user_id, gameResult: 1, gotPoints: bet_points / 2 }
+      when :WIN
         User.add_point(user_id, bet_points)
         { userId: user_id, gameResult: 2, gotPoints: bet_points }
+      when :WIN_BLACKJACK
+        User.add_point(user_id, bet_points * 1.5)
+        { userId: user_id, gameResult: 2, gotPoints: bet_points * 1.5 }
       end
+    end
+
+    def compare_point_and_hands(player_points, player_hands, dealer_points, dealer_hands)
+      return :TIE if player_points == dealer_points && player_hands.length == dealer_hands.length
+      return :LOSE if dealer_points == 21 && dealer_hands.length == 2
+      return :WIN_BLACKJACK if player_points == 21 && player_hands.length == 2
+      return :TIE if player_points == dealer_points
+      return :WIN if player_points > dealer_points || dealer_points > 21
+      :LOSE
     end
 
     def poker_hands_role(hands)
