@@ -51,7 +51,8 @@ class BlackjackPlayer < ActiveRecord::Base
         points = PointCalculator.blackjack_card_points(first_hands)
         can_split = ActionChecker.split(first_hands, player.user_id, player.bet_points)
         can_double_down = ActionChecker.double_down(first_hands, player.user_id, player.bet_points)
-        actions = [1, 2]
+        actions = []
+        actions.append(1, 2) if user_hands_busted?(room_id, player.user_id, false)
         actions.append(3) if can_split
         actions.append(4) if can_double_down
         { userId: player.user_id, cardPoints: points, actions: actions }
@@ -60,14 +61,7 @@ class BlackjackPlayer < ActiveRecord::Base
 
     def can_user_action?(room_id, user_id, is_second)
       return [] if user_hands_busted?(room_id, user_id, is_second)
-      player = find_in_room(room_id, user_id)
-      hands = Hand.hands(is_second ? player.hands_id_second : player.hands_id_first)
-      can_split = ActionChecker.split(hands, player.user_id, player.bet_points)
-      can_double_down = ActionChecker.double_down(hands, player.user_id, player.bet_points)
-      actions = [1, 2]
-      actions.append(3) if can_split
-      actions.append(4) if can_double_down
-      actions
+      [1, 2]
     end
 
     def user_hands_stand(room_id, user_id, is_second)
