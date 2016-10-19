@@ -17,17 +17,16 @@ get '/' do
 end
 
 get '/user/:id' do
-  user = User.find_by_id(params[id])
+  user = User.find_by_id(params['id'].to_i)
   json user.to_hash
 end
 
 post '/user/' do
-  data = JSON.parse request.body.read
-  if data['pointDifference'].positive?
-    User.add_point(data['id'], data['pointDifference'])
+  if params[:pointDifference].to_i.positive?
+    User.add_point(params[:id].to_i, params[:pointDifference].to_i)
   else
-    User.reduce_point(data['id'], -data['pointDifference'])
+    User.reduce_point(params[:id].to_i, -params[:pointDifference].to_i)
   end
-  user = User.find_by_id(params[id])
+  user = User.find_by_id(params[:id].to_i)
   json user.to_hash
 end

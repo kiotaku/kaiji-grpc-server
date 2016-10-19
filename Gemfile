@@ -8,7 +8,7 @@ gem 'activerecord'
 
 group :http do
   gem 'sinatra'
-  gem "sinatra-contrib"
+  gem 'sinatra-contrib'
 end
 
 group :test do
