@@ -120,31 +120,11 @@ class PointCalculator
       end
     end
 
-    def poker_win_point(hands_id, bet_points)
-      role = Hand.role(hands_id)
-      case role
-      when 10
-        return bet_points * 100
-      when 9
-        return bet_points * 20
-      when 8
-        return bet_points * 15
-      when 7
-        return bet_points * 10
-      when 6
-        return bet_points * 7
-      when 5
-        return bet_points * 6
-      when 4
-        return bet_points * 5
-      when 3
-        return bet_points * 4
-      when 2
-        return bet_points * 3
-      when 1
-        return bet_points * 2
-      end
-      0
+    def poker_win_point(room_id)
+        bet_points_sum = PokerRoom.players_bet_sum(room_id)
+        field_points = PokerRoom.room_point(room_id)
+
+        return bet_points_sum + field_points
     end
 
     def baccarat_hands_point(hands)

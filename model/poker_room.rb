@@ -16,6 +16,13 @@ class PokerRoom < ActiveRecord::Base
       bet_points_list.max
     end
 
+    def players_bet_sum(room_id)
+      players = PokerPlayer.where(poker_room_id: room_id)
+      bet_points_list = players.map { |player| player.bet_points }
+      bet_points_sum = bet_points_list.inject { |sum, item| sum + item }
+      bet_points_sum
+    end
+
     def player_max_card_ponit(room_id, user_id)
       point = PokerPlayer.where(poker_room_id: room_id)
         .where.not(user_id: user_id, is_fold: true).map do |player|
