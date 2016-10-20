@@ -53,6 +53,7 @@ class PointCalculator
       return :LOSE if dealer_points == 21 && dealer_hands.length == 2
       return :WIN_BLACKJACK if player_points == 21 && player_hands.length == 2
       return :TIE if player_points == dealer_points
+      return :WIN_BLACKJACK if EventSwitch.on?('blackjack_three_times') && player_points == 21
       return :WIN if player_points > dealer_points || dealer_points > 21
       :LOSE
     end
