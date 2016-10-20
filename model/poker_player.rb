@@ -15,9 +15,13 @@ class PokerPlayer < ActiveRecord::Base
     def call(room_id, user_id)
       player = find_in_room(room_id, user_id)
       points = difference_max_bet(room_id, user_id)
-      return 1 unless User.has_points?(user_id, points)
-      User.reduce_point(user_id, points)
-      player.update(bet_points: PokerRoom.player_max_bet(room_id))
+      if User.has_points?(user_id, points)
+        User.reduce_point(user_id, points)
+        player.update(bet_points: PokerRoom.player_max_bet(room_id))
+      elsif User.find_by_id(user_id).points >= 100
+        points = User.all_in(user_id)
+        player.update(bet_points: points + player.bet_points, all_in: true)
+      end
       0
     end
 

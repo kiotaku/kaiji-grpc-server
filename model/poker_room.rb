@@ -36,6 +36,14 @@ class PokerRoom < ActiveRecord::Base
       point.reverse[0][1]
     end
 
+    def room_point(room_id)
+      points = []
+      PokerPlayer.where(poker_room_id: room_id).each do |player|
+        points.push(player.points) if !player.all_in && player.points != 200
+      end
+      points.min
+    end
+
     def room_game_result(room_id)
       players = PokerPlayer.where(poker_room_id: room_id)
       players.map do |player|
@@ -45,6 +53,7 @@ class PokerRoom < ActiveRecord::Base
         get_point = player.bet_points if result == 1
         get_point = 0 if result.zero?
         User.add_point(player.user_id, get_point)
+        User.reduce_point(player.user_id, 1) if player.all_in
         {
           userId: player.user_id,
           gameResult: result,

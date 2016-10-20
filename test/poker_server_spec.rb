@@ -6,6 +6,9 @@ RSpec.describe 'PokerServer' do
     @stub = Net::Gurigoro::Kaiji::Poker::Poker::Stub.new('game-server:1257', :this_channel_is_insecure)
     (1..10).map do |x|
       User.create(id: x)
+      if x > 8
+        User.reduce_point(x, 9500)
+      end
     end
   end
 
@@ -23,7 +26,7 @@ RSpec.describe 'PokerServer' do
       accessToken: 'test',
       gameRoomId: PokerRoom.all.first.id,
       userId: 1,
-      betPoints: 200
+      betPoints: 600
     ))
     expect(reply.result).to eq :SUCCEED
     expect(reply.userId).to eq 1
@@ -57,9 +60,15 @@ RSpec.describe 'PokerServer' do
         gameRoomId: PokerRoom.all.first.id,
         userId: x
       ))
-      expect(reply.result).to eq :SUCCEED
-      expect(reply.nextPlayersAvailableActions).to eq [:CALL, :RAISE, :FOLD, :OPEN_CARDS]
-      expect(User.where(id: x).first.points).to eq 9_800
+      if x > 8
+        expect(reply.result).to eq :SUCCEED
+        expect(reply.nextPlayersAvailableActions).to eq [:CALL, :FOLD, :OPEN_CARDS]
+        expect(User.where(id: x).first.points).to eq 1
+      else
+        expect(reply.result).to eq :SUCCEED
+        expect(reply.nextPlayersAvailableActions).to eq [:CALL, :RAISE, :FOLD, :OPEN_CARDS]
+        expect(User.where(id: x).first.points).to eq 9_400
+      end
     end
   end
 
@@ -71,7 +80,7 @@ RSpec.describe 'PokerServer' do
     ))
     expect(reply.isSucceed).to eq true
     expect(reply.nextPlayersAvailableActions).to eq [:OPEN_CARDS]
-    expect(User.where(id: 10).first.points).to eq 9_800
+    expect(User.where(id: 10).first.points).to eq 300
   end
 
   it 'set players cards' do
@@ -380,9 +389,10 @@ RSpec.describe 'PokerServer' do
     expect(reply.playerResults[7].gameResult).to eq :LOSE
     expect(reply.playerResults[7].gotPoints).to eq 0
     expect(reply.playerResults[8].gameResult).to eq :WIN
-    expect(reply.playerResults[8].gotPoints).to eq 4000
+    expect(reply.playerResults[8].gotPoints).to eq 10000
     expect(reply.playerResults[9].gameResult).to eq :LOSE
     expect(reply.playerResults[9].gotPoints).to eq 0
+    expect(PokerPlayer.where(poker_room_id: PokerRoom.all.first.id, user_id: 9).first.all_in).to eq true
   end
 
   it 'destroy game room' do

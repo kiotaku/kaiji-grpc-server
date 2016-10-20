@@ -20,6 +20,12 @@ class User < ActiveRecord::Base
       user.update(points: points_balance + points)
     end
 
+    def all_in(id)
+      points = User.find_by_id(id).points
+      reduce_point(id, points - 1)
+      points
+    end
+
     def has_points?(id, points)
       points < User.find_by_id(id).points
     end
