@@ -6,8 +6,10 @@
     $ ./init/database.sh
     $ ./build-env.sh
     $ ./build-server.sh
+    $ ./build-http-server.sh
     $ ./database-start.sh
     $ ./server-start.sh
+    $ ./http-server-start.sh
 
 ## shell script
 1. init/
