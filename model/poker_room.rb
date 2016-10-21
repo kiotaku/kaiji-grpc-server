@@ -56,7 +56,7 @@ class PokerRoom < ActiveRecord::Base
       players.map do |player|
         result = PointCalculator.poker_game_result(room_id, player.user_id) unless player.is_fold
         result = 0 if player.is_fold
-        get_point = PointCalculator.poker_win_point(player.hands_id, player.bet_points) if result == 2
+        get_point = PointCalculator.poker_win_point(room_id) if result == 2
         get_point = player.bet_points if result == 1
         get_point = 0 if result.zero?
         User.add_point(player.user_id, get_point)
