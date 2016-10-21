@@ -16,6 +16,7 @@ require_relative './model/poker_room'
 require_relative './model/poker_player'
 require_relative './model/baccarat_room'
 require_relative './model/baccarat_player'
+require_relative './model/event_switch'
 
 require_relative './util/point_calculator'
 require_relative './util/action_checker'

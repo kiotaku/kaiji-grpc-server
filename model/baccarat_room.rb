@@ -25,6 +25,7 @@ class BaccaratRoom < ActiveRecord::Base
       return { result: 1, playerResults: [] } if winner > 2
       results = BaccaratPlayer.where(baccarat_room_id: room_id).map do |player|
         got_points = get_points(winner, player.bet_side, player.bet_points)
+        got_points * 1.5 if EventSwitch.on?('baccarat_return_1.5_times') && winner == player.bet_side
         User.add_point(player.user_id, got_points)
         {
           userId: player.user_id,
