@@ -11,7 +11,8 @@ ActiveRecord::Base.logger = Logger.new './log/database.log'
 require_relative './model/user'
 require_relative './model/event_switch'
 
-set :port, 80
+set :port, 8080
+set :bind, "0.0.0.0"
 
 get '/' do
   'test'
@@ -19,7 +20,7 @@ end
 
 get '/user/:id' do
   user = User.find_by_id(params['id'].to_i)
-  json user.to_hash
+  json user.attributes
 end
 
 post '/user/' do
@@ -29,7 +30,7 @@ post '/user/' do
     User.reduce_point(params[:id].to_i, -params[:pointDifference].to_i)
   end
   user = User.find_by_id(params[:id].to_i)
-  json user.to_hash
+  json user.attributes
 end
 
 get '/event/:name/on' do

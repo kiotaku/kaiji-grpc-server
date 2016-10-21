@@ -1,5 +1,6 @@
 require 'active_record'
 require 'yaml'
+require 'zlib'
 
 desc 'Migrate database'
 task migrate: :environment do

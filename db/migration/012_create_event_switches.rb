@@ -1,3 +1,4 @@
+require_relative './../../model/event_switch'
 class CreateEventSwitches < ActiveRecord::Migration
   def up
     create_table :event_switches do |t|

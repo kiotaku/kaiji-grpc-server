@@ -52,9 +52,9 @@ class BlackjackPlayer < ActiveRecord::Base
         can_split = ActionChecker.split(first_hands, player.user_id, player.bet_points)
         can_double_down = ActionChecker.double_down(first_hands, player.user_id, player.bet_points)
         actions = []
-        actions.append(1, 2) if user_hands_busted?(room_id, player.user_id, false)
-        actions.append(3) if can_split
-        actions.append(4) if can_double_down
+        actions.push(1, 2) if !user_hands_busted?(room_id, player.user_id, false)
+        actions.push(3) if can_split
+        actions.push(4) if can_double_down
         { userId: player.user_id, cardPoints: points, actions: actions }
       end
     end
