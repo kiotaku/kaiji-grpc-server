@@ -1,13 +1,13 @@
 db:
   production:
     adapter:  mysql2
-    host:     game-database
-    username: root
-    password: kaiji
+    host:     localhost
+    username: kaiji
+    password: Kaiji_1257
     database: kaiji
   development:
     adapter:  mysql2
-    host:     game-database
-    username: root
-    password: kaiji
+    host:     localhost
+    username: kaiji
+    password: Kaiji_1257
     database: kaiji
