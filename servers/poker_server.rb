@@ -19,6 +19,7 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
     Net::Gurigoro::Kaiji::Poker::CallReply.new(
       result: result,
       userId: req.userId,
+      isAllIn: PokerPlayer.find_in_room(req.gameRoomId, req.userId).all_in,
       nextPlayersAvailableActions: ActionChecker.poker_available_action(req.gameRoomId, req.userId)
     )
   end
@@ -28,7 +29,8 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
     Net::Gurigoro::Kaiji::Poker::RaiseReply.new(
       result: result,
       userId: req.userId,
-      nextPlayersAvailableActions: ActionChecker.poker_available_action(req.gameRoomId, req.userId)
+      nextPlayersAvailableActions: ActionChecker.poker_available_action(req.gameRoomId, req.userId),
+      fieldBetPoints: PokerRoom.player_max_bet(req.gameRoomId)
     )
   end
 

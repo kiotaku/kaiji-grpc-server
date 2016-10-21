@@ -3,7 +3,7 @@
 
 require 'google/protobuf'
 
-require_relative 'trump_pb'
+require_relative './trump_pb'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.poker.CreateNewGameRoomRequest" do
     optional :accessToken, :string, 1
@@ -21,6 +21,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "net.gurigoro.kaiji.poker.CallReply" do
     optional :result, :enum, 1, "net.gurigoro.kaiji.poker.BettingResult"
     optional :userId, :int64, 2
+    optional :isAllIn, :bool, 3
     repeated :nextPlayersAvailableActions, :enum, 4, "net.gurigoro.kaiji.poker.PlayerAction"
   end
   add_message "net.gurigoro.kaiji.poker.RaiseRequest" do
@@ -33,6 +34,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :result, :enum, 1, "net.gurigoro.kaiji.poker.BettingResult"
     optional :userId, :int64, 2
     repeated :nextPlayersAvailableActions, :enum, 3, "net.gurigoro.kaiji.poker.PlayerAction"
+    optional :fieldBetPoints, :int64, 4
   end
   add_message "net.gurigoro.kaiji.poker.CheckRequest" do
     optional :accessToken, :string, 1

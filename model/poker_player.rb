@@ -76,8 +76,6 @@ class PokerPlayer < ActiveRecord::Base
       players.destroy_all
     end
 
-    private
-
     def find_in_room(room_id, user_id)
       PokerPlayer.where(poker_room_id: room_id, user_id: user_id).first
     end
