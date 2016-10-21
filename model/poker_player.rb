@@ -61,7 +61,7 @@ class PokerPlayer < ActiveRecord::Base
 
     def user_card_point(room_id, user_id)
       role = user_role(room_id, user_id)
-      role * 100 + Hand.max_pair_card(find_in_room(room_id, user_id).hands_id)
+      role * 1000 + Hand.max_pair_card(find_in_room(room_id, user_id).hands_id)
     end
 
     def difference_max_bet(room_id, user_id)
