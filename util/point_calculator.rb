@@ -33,17 +33,22 @@ class PointCalculator
     def blackjack_game_result(user_id, player_hands, dealer_hands, bet_points)
       player_points = blackjack_card_points(player_hands)
       dealer_points = blackjack_card_points(dealer_hands)
+      is_zero_points = User.find_by_id(user_id).points <= 1
       case compare_point_and_hands(player_points, player_hands, dealer_points, dealer_hands)
       when :LOSE
+        User.reduce_point(user_id, 1) if is_zero_points
         { userId: user_id, gameResult: 0, gotPoints: 0 }
       when :TIE
         User.add_point(user_id, bet_points / 2)
+        User.reduce_point(user_id, 1) if is_zero_points
         { userId: user_id, gameResult: 1, gotPoints: bet_points / 2 }
       when :WIN
         User.add_point(user_id, bet_points)
+        User.reduce_point(user_id, 1) if is_zero_points
         { userId: user_id, gameResult: 2, gotPoints: bet_points }
       when :WIN_BLACKJACK
         User.add_point(user_id, bet_points * 1.5)
+        User.reduce_point(user_id, 1) if is_zero_points
         { userId: user_id, gameResult: 2, gotPoints: bet_points * 1.5 }
       end
     end

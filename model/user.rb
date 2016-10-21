@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
     end
 
     def has_points?(id, points)
-      points < User.find_by_id(id).points
+      points <= User.find_by_id(id).points
     end
 
     def reduce_point(id, points)
