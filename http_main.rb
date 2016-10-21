@@ -33,6 +33,10 @@ post '/user/' do
   json user.attributes
 end
 
+git '/event-list/' do
+  EventSwitch.all.attributes
+end
+
 get '/event/:name/on' do
   EventSwitch.where(event_name: params['name']).update_all(is_valid: true)
 end
