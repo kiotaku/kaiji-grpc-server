@@ -7,6 +7,13 @@ class Hand < ActiveRecord::Base
     DIAMOND: 3
   }
 
+  @suit_stregths - {
+    0 => 3,
+    2 => 2,
+    3 => 1,
+    1 => 0
+  }
+
   class << self
     def hands(hands_id)
       Hand.where(hands_id: hands_id).pluck(:suit, :number)
@@ -26,6 +33,7 @@ class Hand < ActiveRecord::Base
 
     def max_pair_card(hands_id)
       hands = Hand.hands(hands_id)
+      hands = hands.map { |item| [@suit_stregths[item[0]], item[1]] }
       hands_group_num = hands.group_by { |item| item[1] }
       hands_group_length = hands_group_num.group_by { |k, v| v.length }
       card = hands_group_length[hands_group_length.keys.max].max[1].sort.reverse[0]
@@ -34,6 +42,7 @@ class Hand < ActiveRecord::Base
 
     def max_pair_card_second(hands_id)
       hands = Hand.hands(hands_id)
+      hands = hands.map { |item| [@suit_stregths[item[0]], item[1]] }
       hands_group_num = hands.group_by { |item| item[1] }
       hands_group_length = hands_group_num.group_by { |k, v| v.length }
       card = hands_group_length[hands_group_length.keys.sort.reverse[1]].max[1].sort.reverse[0]
