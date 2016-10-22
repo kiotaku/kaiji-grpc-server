@@ -46,26 +46,26 @@ class PokerRoom < ActiveRecord::Base
     def room_point(room_id)
       points = []
       PokerPlayer.where(poker_room_id: room_id).each do |player|
-        points.push(player.points) if !player.all_in && player.points != 200
+        points.push(player.bet_points) if !player.all_in && player.bet_points != 200
       end
       points.min
     end
 
     def room_game_result(room_id)
-      players = PokerPlayer.where(poker_room_id: room_id)
-      players.map do |player|
-        result = PointCalculator.poker_game_result(room_id, player.user_id) unless player.is_fold
-        result = 0 if player.is_fold
-        get_point = PointCalculator.poker_win_point(room_id) if result == 2
-        get_point = player.bet_points if result == 1
-        get_point = 0 if result.zero?
-        User.add_point(player.user_id, get_point)
-        User.reduce_point(player.user_id, 1) if player.all_in
-        {
-          userId: player.user_id,
-          gameResult: result,
-          gotPoints: get_point
-        }
+        players = PokerPlayer.where(poker_room_id: room_id)
+        players.map do |player|
+          result = PointCalculator.poker_game_result(room_id, player.user_id) unless player.is_fold
+          result = 0 if player.is_fold
+          get_point = PointCalculator.poker_win_point(room_id) if result == 2
+          get_point = player.bet_points if result == 1
+          get_point = 0 if result.zero?
+          User.add_point(player.user_id, get_point)
+          User.reduce_point(player.user_id, 1) if player.all_in
+          {
+            userId: player.user_id,
+            gameResult: result,
+            gotPoints: get_point
+          }
       end
     end
 

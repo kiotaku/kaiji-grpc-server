@@ -7,7 +7,7 @@ class Hand < ActiveRecord::Base
     DIAMOND: 3
   }
 
-  @suit_stregths - {
+  @suit_stregths = {
     0 => 3,
     2 => 2,
     3 => 1,

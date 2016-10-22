@@ -104,6 +104,7 @@ class PointCalculator
     def poker_game_result(room_id, user_id)
       point = PokerPlayer.user_card_point(room_id, user_id)
       max_point = PokerRoom.player_max_card_ponit(room_id, user_id)
+      return 2 if max_point.blank?
       if point < max_point
         0
       elsif point == max_point
@@ -125,7 +126,8 @@ class PointCalculator
         bet_points_sum = PokerRoom.players_bet_sum(room_id)
         field_points = PokerRoom.room_point(room_id)
 
-        return bet_points_sum + field_points
+        bet_points_sum + field_points if field_points.present?
+        bet_points_sum + 200
     end
 
     def baccarat_hands_point(hands)

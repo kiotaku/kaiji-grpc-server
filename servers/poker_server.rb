@@ -56,13 +56,20 @@ class PokerServer < Net::Gurigoro::Kaiji::Poker::Poker::Service
   end
 
   def get_game_result(req, _call)
+begin
+p req
     results = PokerRoom.room_game_result(req.gameRoomId)
+p results
     Net::Gurigoro::Kaiji::Poker::GetGameResultReply.new(
       isSucceed: true,
       playerResults: results.map do |result|
         Net::Gurigoro::Kaiji::Poker::PlayerResult.new(result)
       end
     )
+rescue => e
+p e
+p e.backtrace
+end
   end
 
   def destroy_game_room(req, _call)
