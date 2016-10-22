@@ -16,6 +16,7 @@ class BlackjackRoom < ActiveRecord::Base
       return 2 unless BlackjackPlayer.can_bet?(room_id, user_id)
       return 1 unless User.has_points?(user_id, bet_points)
       BlackjackPlayer.bet_points(room_id, user_id, bet_points)
+      User.add_point(user_id, 1) if User.find_by_id(user_id).points - bet_points <= 0
       User.reduce_point(user_id, bet_points)
       0
     end

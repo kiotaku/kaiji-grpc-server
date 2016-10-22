@@ -91,7 +91,11 @@ class BlackjackPlayer < ActiveRecord::Base
     def bet_points_twice(player)
       bet_points = player.bet_points
       if User.has_points?(player.user_id, bet_points)
-        User.reduce_point(player.user_id, bet_points)
+        if User.find_by_id(player.user_id).points - bet_points <= 0
+          User.reduce_point(player.user_id, bet_points - 1)
+        else
+          User.reduce_point(player.user_id, bet_points)
+        end
         player.update(bet_points: bet_points * 2)
       else
         false
