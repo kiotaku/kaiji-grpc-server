@@ -9,15 +9,19 @@ class BaccaratRoom < ActiveRecord::Base
     end
 
     def start_opening_cards(room_id)
-      return 1 unless BaccaratPlayer.all_user_betted?(room_id)
-      actions = Baccarat.emulate
-      uri = URI.parse('http://192.168.15.11/')
-      http = Net::HTTP.new(uri.host, uri.port)
-      req = Net::HTTP::Post.new(uri.path)
-      req.set_from_data(actions)
-      http.request(req)
-      BaccaratRoom.find_by_id(room_id).update(result: actions.reverse[0][:winner])
-      0
+      begin
+      	return 1 unless BaccaratPlayer.all_user_betted?(room_id)
+      	actions = Baccarat.emulate
+      	uri = URI.parse('http://192.168.16.12:8080/')
+      	http = Net::HTTP.new(uri.host, uri.port)
+      	req = Net::HTTP::Post.new(uri.path)
+      	req.body = actions.to_json
+      	http.request(req)
+      	BaccaratRoom.find_by_id(room_id).update(result: actions.reverse[0][:winner])
+      	0
+	rescue=>e
+  	p e
+      end
     end
 
     def game_results(room_id)
