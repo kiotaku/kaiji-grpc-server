@@ -26,6 +26,7 @@ class PointCalculator
       if !Hand.busted?(hands_id)
         blackjack_game_result(user_id, Hand.hands(hands_id), dealer_hands, bet_points)
       else
+        User.reduce_point(user_id, 1) if User.find_by_id(user_id).points <= 1
         { userId: user_id, gameResult: 0, gotPoints: 0 }
       end
     end
