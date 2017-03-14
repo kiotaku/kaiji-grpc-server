@@ -40,6 +40,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :name, :string, 3
     optional :isAvailable, :bool, 4
     optional :isAnonymous, :bool, 5
+    optional :autoAssginUserId, :bool, 6
   end
   add_message "net.gurigoro.kaiji.AddUserReply" do
     optional :isSucceed, :bool, 1
