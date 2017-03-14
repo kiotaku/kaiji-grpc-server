@@ -7,7 +7,7 @@ db:
     database: kaiji
   development:
     adapter:  mysql2
-    host:     localhost
-    username: kaiji
-    password: Kaiji_1257
+    host:     mysql
+    username: root
+    password: kaiji
     database: kaiji

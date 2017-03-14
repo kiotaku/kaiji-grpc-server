@@ -48,7 +48,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_enum "net.gurigoro.kaiji.baccarat.PlayerResult.GameResult" do
     value :LOSE, 0
     value :WIN, 1
-    value :WIN_WITH_BETTING_TIE, 2
+    value :TIE, 2
   end
   add_message "net.gurigoro.kaiji.baccarat.GetGameResultReply" do
     optional :result, :enum, 1, "net.gurigoro.kaiji.baccarat.GetGameResultReply.GetGameRequestResult"
