@@ -6,13 +6,33 @@ RSpec.describe 'KaijiServer' do
     @stub = Net::Gurigoro::Kaiji::Kaiji::Stub.new('game-server:1257', :this_channel_is_insecure)
   end
 
+  it 'add user and params w/o id' do
+    reply = @stub.add_user(Net::Gurigoro::Kaiji::AddUserRequest.new(
+      accessToken: 'test',
+      name: 'test',
+      isAvailable: true,
+      isAnonymous: true,
+      autoAssginUserId: true
+    ))
+    expect(reply.isSucceed).to eq true
+    expect(reply.userId).to eq 1
+
+    user = User.find(1)
+    expect(user.name).to eq 'test'
+    expect(user.points).to eq 10_000
+    expect(user.is_available).to eq true
+    expect(user.is_anonymous).to eq true
+    expect(user.continue_count).to eq 0
+  end
+
   it 'add user' do
     reply = @stub.add_user(Net::Gurigoro::Kaiji::AddUserRequest.new(
       accessToken: 'test',
       userId: 10,
       name: 'test',
       isAvailable: true,
-      isAnonymous: true
+      isAnonymous: true,
+      autoAssginUserId: false
     ))
     expect(reply.isSucceed).to eq true
     expect(reply.userId).to eq 10
