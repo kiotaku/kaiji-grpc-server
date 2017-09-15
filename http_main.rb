@@ -33,7 +33,7 @@ post '/user/' do
   json user.attributes
 end
 
-git '/event-list/' do
+get '/event-list/' do
   EventSwitch.all.attributes
 end
 
