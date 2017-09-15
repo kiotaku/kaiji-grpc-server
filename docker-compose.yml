@@ -1,0 +1,51 @@
+version: "2"
+services:
+  game-server:
+    build:
+      context: .
+      dockerfile: ./build-env/Dockerfile-server
+    volumes:
+      - ".:/app/"
+    links:
+      - "game-database:mysql"
+    ports:
+      - "1257:1257"
+    depends_on:
+      - game-database
+  http-server:
+    build:
+      context: .
+      dockerfile: ./build-env/Dockerfile-http-server
+    volumes:
+      - ".:/app/"
+    links:
+      - "game-database:mysql"
+    ports:
+      - "80:80"
+    depends_on:
+      - game-server
+      - game-database
+  game-database:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: kaiji
+    volumes:
+      - "game-data:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+  test-clinet:
+    build:
+      context: .
+      dockerfile: ./build-env/Dockerfile-test-client
+    volumes:
+      - ".:/app/"
+    links:
+      - "game-database:mysql"
+      - "game-server:game-server"
+    depends_on:
+      - game-server
+      - game-database
+
+volumes:
+  game-data:
+    driver: local
