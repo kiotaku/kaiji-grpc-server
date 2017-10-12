@@ -3,6 +3,10 @@ FROM ruby
 COPY . /app/
 
 RUN set -x && \
-    gem install bundler
+    gem install bundler && \
+    cd /app && \
+    bundle install --without test
 
-CMD set -x && cd /app && bundle install --without test && bundle exec rake migrate && ruby /app/http_main.rb
+WORKDIR /app
+
+CMD ruby http_main.rb

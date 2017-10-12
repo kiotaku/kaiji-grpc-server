@@ -5,7 +5,12 @@ require 'logger'
 @logger = Logger.new './log/grpc.log'
 
 dbconfig = YAML.load_file './config/database.yml'
-ActiveRecord::Base.establish_connection dbconfig['db']['development']
+mode = 'development'
+if ENV['kaiji_exec'] == 'production'
+  mode = 'production'
+end
+
+ActiveRecord::Base.establish_connection dbconfig['db'][mode]
 ActiveRecord::Base.logger = Logger.new './log/database.log'
 
 require_relative './model/user'

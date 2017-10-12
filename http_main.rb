@@ -5,7 +5,12 @@ require 'sinatra/json'
 
 require 'active_record'
 dbconfig = YAML.load_file './config/database.yml'
-ActiveRecord::Base.establish_connection dbconfig['db']['development']
+mode = 'development'
+if ENV['kaiji_exec'] == 'production'
+  mode = 'production'
+end
+
+ActiveRecord::Base.establish_connection dbconfig['db'][mode]
 ActiveRecord::Base.logger = Logger.new './log/database.log'
 
 require_relative './model/user'
@@ -33,7 +38,7 @@ post '/user/' do
   json user.attributes
 end
 
-git '/event-list/' do
+get '/event-list/' do
   EventSwitch.all.attributes
 end
 
