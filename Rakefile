@@ -16,8 +16,9 @@ task :create do
     mode = 'production'
   end
 
-  client = Mysql2::Client.new(dbconfig['db'][mode].merge(database: nil))
-  client.query("CREATE DATABASE kaiji")
+  ActiveRecord::Base.establish_connection(dbconfig['db'][mode].symbolize_keys.merge(:database => "mysql"))
+  ActiveRecord::Base.connection.drop_database dbconfig['db'][mode].symbolize_keys[:database] rescue nil
+  ActiveRecord::Base.connection.create_database dbconfig['db'][mode].symbolize_keys[:database]
 end
 
 task :environment do

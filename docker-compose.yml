@@ -21,7 +21,7 @@ services:
     links:
       - "game-database:mysql"
     ports:
-      - "80:80"
+      - "8080:8080"
     depends_on:
       - game-server
       - game-database
@@ -33,18 +33,18 @@ services:
       - "game-data:/var/lib/mysql"
     ports:
       - "3306:3306"
-  test-clinet:
-    build:
-      context: .
-      dockerfile: ./build-env/Dockerfile-test-client
-    volumes:
-      - ".:/app/"
-    links:
-      - "game-database:mysql"
-      - "game-server:game-server"
-    depends_on:
-      - game-server
-      - game-database
+  # test-clinet:
+  #   build:
+  #     context: .
+  #     dockerfile: ./build-env/Dockerfile-test-client
+  #   volumes:
+  #     - ".:/app/"
+  #   links:
+  #     - "game-database:mysql"
+  #     - "game-server:game-server"
+  #   depends_on:
+  #     - game-server
+  #     - game-database
 
 volumes:
   game-data:
