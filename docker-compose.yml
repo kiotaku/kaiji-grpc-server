@@ -12,6 +12,7 @@ services:
       - "8080:8080"
     depends_on:
       - game-database
+    restart: always
   game-database:
     image: mysql
     environment:
@@ -20,6 +21,7 @@ services:
       - "game-data:/var/lib/mysql"
     ports:
       - "3306:3306"
+    restart: always
   # test-clinet:
   #   build:
   #     context: .
