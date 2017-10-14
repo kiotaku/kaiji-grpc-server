@@ -1,14 +1,12 @@
-class PointServer < Sinatra::Base
+class PointRoutes < Sinatra::Base
   post('/get_point_balance') do
     user = User.find_by_id(params[:userId])
     if user.blank?
       json isSucceed: false
     else
-      json {
-        isSucceed: true,
-        userId: user.id,
-        pointBalance: user.points
-      }
+      json isSucceed: true,
+           userId: user.id,
+           pointBalance: user.points
     end
   end
 
@@ -17,12 +15,10 @@ class PointServer < Sinatra::Base
     if !result
       json isSucceed: false
     else
-      json {
-        isSucceed: true,
-        userId: params[:userId],
-        addedPoints: params[:addPoints],
-        pointBalance: User.find_by_id(params[:userId]).points
-      }
+      json isSucceed: true,
+           userId: params[:userId],
+           addedPoints: params[:addPoints],
+           pointBalance: User.find_by_id(params[:userId]).points
     end
   end
 end

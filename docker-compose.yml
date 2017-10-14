@@ -9,21 +9,8 @@ services:
     links:
       - "game-database:mysql"
     ports:
-      - "1257:1257"
-    depends_on:
-      - game-database
-  http-server:
-    build:
-      context: .
-      dockerfile: ./build-env/Dockerfile-http-server
-    volumes:
-      - ".:/app/"
-    links:
-      - "game-database:mysql"
-    ports:
       - "8080:8080"
     depends_on:
-      - game-server
       - game-database
   game-database:
     image: mysql

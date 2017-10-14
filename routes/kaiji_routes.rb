@@ -1,26 +1,23 @@
-class KaijiServer < Sinatra::Base
-  def initialize(logger)
-    @logger = logger
-  end
-
-  post('/ping') do
+class KaijiRoutes < Sinatra::Base
+  get('/ping') do
     json message: 'pong'
   end
 
   post('/log') do
+    logger = Logger.new './log/application.log'
     case params[:logLevel].to_sym
     when :LOG_DEBUG
-      @logger.debug "user_id: #{req.userId} message: #{req.message}"
+      logger.debug "user_id: #{req.userId} message: #{req.message}"
     when :LOG_INFO
-      @logger.info "user_id: #{req.userId} message: #{req.message}"
+      logger.info "user_id: #{req.userId} message: #{req.message}"
     when :LOG_WARN
-      @logger.warn "user_id: #{req.userId} message: #{req.message}"
+      logger.warn "user_id: #{req.userId} message: #{req.message}"
     when :LOG_ERROR
-      @logger.error "user_id: #{req.userId} message: #{req.message}"
+      logger.error "user_id: #{req.userId} message: #{req.message}"
     when :LOG_FATAL
-      @logger.fatal "user_id: #{req.userId} message: #{req.message}"
+      logger.fatal "user_id: #{req.userId} message: #{req.message}"
     else
-      @logger.unknown "user_id: #{req.userId} message: #{req.message}"
+      logger.unknown "user_id: #{req.userId} message: #{req.message}"
     end
     status 200
     body ""

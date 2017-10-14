@@ -1,4 +1,4 @@
-class BlackjackServer < Sinatra::Base
+class BlackjackRoutes < Sinatra::Base
   post('/create_new_game_room') do
     begin
       room = BlackjackRoom.create_room(params[:usersId])
@@ -10,17 +10,13 @@ class BlackjackServer < Sinatra::Base
   end
 
   post('/betting') do
-    json {
-      result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints]),
-      userId: req.userId
-    }
+    json result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints]),
+         userId: req.userId
   end
 
   post('/set_game_result') do
-    json {
-      isSucceed: true,
-      playerResults: BlackjackRoom.result_room(params[:gameRoomId])
-    }
+    json isSucceed: true,
+         playerResults: BlackjackRoom.result_room(params[:gameRoomId])
   end
 
   post('/destroy_game_room') do
