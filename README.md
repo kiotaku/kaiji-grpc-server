@@ -3,5 +3,5 @@
 
 ## 起動方法
     $ docker-compose build
-    $ docker-compose run --rm game-server bundle rake create migrate
+    $ docker-compose run --rm game-server bundle exec rake create migrate
     $ docker-compose up
