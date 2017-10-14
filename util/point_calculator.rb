@@ -22,36 +22,17 @@ class PointCalculator
       points
     end
 
-    def blackjack_game_points(user_id, hands_id, dealer_hands, bet_points)
-      if !Hand.busted?(hands_id)
-        blackjack_game_result(user_id, Hand.hands(hands_id), dealer_hands, bet_points)
-      else
-        User.reduce_point(user_id, 1) if User.find_by_id(user_id).points <= 1
-        { userId: user_id, gameResult: 0, gotPoints: 0 }
-      end
-    end
-
-    def blackjack_game_result(user_id, player_hands, dealer_hands, bet_points)
-      player_points = blackjack_card_points(player_hands)
-      dealer_points = blackjack_card_points(dealer_hands)
+    def blackjack_game_result(user_id, player_result, bet_points)
       is_zero_points = User.find_by_id(user_id).points <= 1
-      case compare_point_and_hands(player_points, player_hands, dealer_points, dealer_hands)
-      when :LOSE
-        User.reduce_point(user_id, 1) if is_zero_points
-        { userId: user_id, gameResult: 0, gotPoints: 0 }
-      when :TIE
-        User.add_point(user_id, bet_points / 2)
-        User.reduce_point(user_id, 1) if is_zero_points
-        { userId: user_id, gameResult: 1, gotPoints: bet_points / 2 }
-      when :WIN
-        User.add_point(user_id, bet_points)
-        User.reduce_point(user_id, 1) if is_zero_points
-        { userId: user_id, gameResult: 2, gotPoints: bet_points }
-      when :WIN_BLACKJACK
-        User.add_point(user_id, bet_points * 1.5)
-        User.reduce_point(user_id, 1) if is_zero_points
-        { userId: user_id, gameResult: 2, gotPoints: bet_points * 1.5 }
-      end
+      got_points = case player_result
+        when :LOSE then 0
+        when :TIE then bet_points
+        when :WIN then bet_points * 2
+        when :WIN_BLACKJACK then bet_points * 3
+        end
+      User.add_point(user_id, got_points)
+      User.reduce_point(user_id, 1) if is_zero_points
+      { userId: user_id, gameResult: player_result, gotPoints: got_points }
     end
 
     def compare_point_and_hands(player_points, player_hands, dealer_points, dealer_hands)
@@ -107,7 +88,7 @@ class PointCalculator
       state
     end
 
-    def poker_game_result(room_id, user_id)
+    def poker_game_result(room_id)
       point = PokerPlayer.user_card_point(room_id, user_id)
       max_point = PokerRoom.player_max_card_ponit(room_id, user_id)
       return 2 if max_point.blank?
@@ -129,11 +110,7 @@ class PointCalculator
     end
 
     def poker_win_point(room_id)
-        bet_points_sum = PokerRoom.players_bet_sum(room_id)
-        field_points = PokerRoom.room_point(room_id)
-
-        bet_points_sum + field_points if field_points.present?
-        bet_points_sum + 200
+      PokerRoom.players_bet_sum(room_id)
     end
 
     def baccarat_hands_point(hands)

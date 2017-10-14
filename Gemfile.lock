@@ -90,6 +90,7 @@ DEPENDENCIES
   activerecord
   grpc
   mysql2
+  rack
   rake
   rspec
   sinatra

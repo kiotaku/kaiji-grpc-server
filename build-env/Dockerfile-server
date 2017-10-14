@@ -5,8 +5,10 @@ COPY . /app/
 RUN set -x && \
     gem install bundler && \
     cd /app && \
-    bundle install --without test --without http
+    bundle install --without test
 
 WORKDIR /app
 
-CMD ruby main.rb
+EXPOSE 8080
+
+CMD rackup -p 8080 -o 0.0.0.0

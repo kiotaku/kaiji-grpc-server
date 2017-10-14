@@ -9,6 +9,7 @@ gem 'activerecord'
 group :http do
   gem 'sinatra'
   gem 'sinatra-contrib'
+  gem 'rack'
 end
 
 group :test do
