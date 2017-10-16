@@ -7,24 +7,24 @@ class KaijiRoutes < Sinatra::Base
     logger = Logger.new './log/application.log'
     case params[:logLevel].to_sym
     when :LOG_DEBUG
-      logger.debug "user_id: #{req.userId} message: #{req.message}"
+      logger.debug "user_id: #{params[:userId]} message: #{params[:message]}"
     when :LOG_INFO
-      logger.info "user_id: #{req.userId} message: #{req.message}"
+      logger.info "user_id: #{params[:userId]} message: #{params[:message]}"
     when :LOG_WARN
-      logger.warn "user_id: #{req.userId} message: #{req.message}"
+      logger.warn "user_id: #{params[:userId]} message: #{params[:message]}"
     when :LOG_ERROR
-      logger.error "user_id: #{req.userId} message: #{req.message}"
+      logger.error "user_id: #{params[:userId]} message: #{params[:message]}"
     when :LOG_FATAL
-      logger.fatal "user_id: #{req.userId} message: #{req.message}"
+      logger.fatal "user_id: #{params[:userId]} message: #{params[:message]}"
     else
-      logger.unknown "user_id: #{req.userId} message: #{req.message}"
+      logger.unknown "user_id: #{params[:userId]} message: #{params[:message]}"
     end
     status 200
     body ""
   end
 
   post('/get_user_by_id') do
-    json user_model_convert_to_get_user_reply(User.find_by_id(req.userId))
+    json user_model_convert_to_get_user_reply(User.find_by_id(params[:userId]))
   end
 
   post('/add_user') do

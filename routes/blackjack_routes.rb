@@ -16,7 +16,7 @@ class BlackjackRoutes < Sinatra::Base
 
   post('/set_game_result') do
     json isSucceed: true,
-         playerResults: BlackjackRoom.result_room(params[:gameRoomId])
+         playerResults: BlackjackRoom.result_room(params[:gameRoomId], params[:results])
   end
 
   post('/destroy_game_room') do

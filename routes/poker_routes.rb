@@ -37,7 +37,7 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/set_winner') do
-    results = PokerRoom.room_game_result(params[:gameRoomId])
+    results = PokerRoom.room_game_result(params[:gameRoomId], params[:winnerId])
     json isSucceed: true,
          playerResults: results
   end
