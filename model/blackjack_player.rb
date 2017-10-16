@@ -1,8 +1,15 @@
 require 'securerandom'
 
 class BlackjackPlayer < ActiveRecord::Base
+  RESULT_MAP = {
+    'win': :WIN,
+    'lose': :LOSE,
+    'tie': :TIE,
+    'blackjack': :WIN_BLACKJACK
+  }
+
   def user_game_result(result)
-    PointCalculator.blackjack_game_result(user_id, result, bet_points)
+    PointCalculator.blackjack_game_result(user_id, RESULT_MAP[result], bet_points)
   end
 
   class << self
