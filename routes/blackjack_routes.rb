@@ -1,4 +1,12 @@
 class BlackjackRoutes < Sinatra::Base
+  configure do
+    enable :cross_origin
+  end
+
+  before do
+    response.headers['Access-Control-Allow-Origin'] = '*'
+  end
+  
   post('/create_new_game_room') do
     begin
       room = BlackjackRoom.create_room(params[:usersId])

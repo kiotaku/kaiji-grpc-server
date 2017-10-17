@@ -5,6 +5,7 @@ require 'json'
 require 'sinatra'
 require 'sinatra/json'
 require 'sinatra/base'
+require 'sinatra/cross_origin'
 
 dbconfig = YAML.load_file './config/database.yml'
 mode = 'development'
