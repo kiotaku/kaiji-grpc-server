@@ -10,7 +10,6 @@ class User < ActiveRecord::Base
         user = User.new params.merge(id: id)
       end
       user.save
-      user
     end
 
     def modify(id, params = {})
