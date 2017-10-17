@@ -9,7 +9,7 @@ class BlackjackPlayer < ActiveRecord::Base
   }
 
   def user_game_result(result)
-    PointCalculator.blackjack_game_result(user_id, RESULT_MAP[result], bet_points)
+    PointCalculator.blackjack_game_result(user_id, RESULT_MAP[result.to_sym], bet_points)
   end
 
   class << self

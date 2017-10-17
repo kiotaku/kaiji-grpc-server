@@ -4,12 +4,18 @@ class BlackjackRoutes < Sinatra::Base
   end
 
   before do
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    if request.request_method == 'OPTIONS'
+      response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+      response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept"
+
+      halt 200
+    end
   end
 
   post('/create_new_game_room') do
     begin
-      room = BlackjackRoom.create_room(params[:usersId])
+      room = BlackjackRoom.create_room(params[:userIds])
     rescue
       json isSucceed: false
     else
@@ -18,13 +24,14 @@ class BlackjackRoutes < Sinatra::Base
   end
 
   post('/betting') do
-    json result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints]),
+    json result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints].to_i),
          userId: params[:userId]
   end
 
   post('/set_game_result') do
+    params = JSON.parse request.body.read
     json isSucceed: true,
-         playerResults: BlackjackRoom.result_room(params[:gameRoomId], params[:results])
+         playerResults: BlackjackRoom.result_room(params['gameRoomId'], params['results'])
   end
 
   post('/destroy_game_room') do
