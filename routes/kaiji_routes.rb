@@ -33,7 +33,7 @@ class KaijiRoutes < Sinatra::Base
                       name: params[:name],
                       is_available: params[:isAvailable],
                       is_anonymous: params[:isAnonymous])
-    json isSucceed: result, userId: params[:userId]
+    json isSucceed: result[0], userId: params[:autoAssignId] ? result[1] : params[:userId]
   end
 
   post('/modify_user') do

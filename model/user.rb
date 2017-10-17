@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
       else
         user = User.new params.merge(id: id)
       end
-      user.save
+      [ user.save, user.id ]
     end
 
     def modify(id, params = {})
