@@ -2,9 +2,15 @@ class User < ActiveRecord::Base
   self.primary_key = 'id'
 
   class << self
-    def add(id, params = {})
-      user = User.new params.merge(id: id)
+    def add(id, auto_assign = false, params = {})
+      if auto_assign
+        last_user = User.last
+        user = User.new params.merge(id: last_user ? last_user.id : 1)
+      else
+        user = User.new params.merge(id: id)
+      end
       user.save
+      user
     end
 
     def modify(id, params = {})

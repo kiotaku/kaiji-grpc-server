@@ -29,6 +29,7 @@ class KaijiRoutes < Sinatra::Base
 
   post('/add_user') do
     result = User.add(params[:userId],
+                      params[:autoAssignId]
                       name: params[:name],
                       is_available: params[:isAvailable],
                       is_anonymous: params[:isAnonymous])
