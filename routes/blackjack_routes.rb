@@ -6,7 +6,7 @@ class BlackjackRoutes < Sinatra::Base
   before do
     response.headers['Access-Control-Allow-Origin'] = '*'
   end
-  
+
   post('/create_new_game_room') do
     begin
       room = BlackjackRoom.create_room(params[:usersId])
@@ -19,7 +19,7 @@ class BlackjackRoutes < Sinatra::Base
 
   post('/betting') do
     json result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints]),
-         userId: req.userId
+         userId: params[:userId]
   end
 
   post('/set_game_result') do
@@ -29,7 +29,7 @@ class BlackjackRoutes < Sinatra::Base
 
   post('/destroy_game_room') do
     begin
-      BlackjackRoom.destroy_room(req.gameRoomId)
+      BlackjackRoom.destroy_room(params[:gameRoomId])
     rescue
       json isSucceed: false
     else
