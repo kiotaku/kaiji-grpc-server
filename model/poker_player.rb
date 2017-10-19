@@ -26,6 +26,7 @@ class PokerPlayer < ActiveRecord::Base
     end
 
     def raise(room_id, user_id, raise_points)
+      call(room_id, user_id)
       player = find_in_room(room_id, user_id)
       next_points = player.bet_points + raise_points
       return 1 unless User.has_points?(user_id, raise_points)
@@ -37,8 +38,8 @@ class PokerPlayer < ActiveRecord::Base
 
     def fold(room_id, user_id)
       player = find_in_room(room_id, user_id)
-      if player.bet_points.zero?
-        User.reduce_point(user_id, 200)
+      if player.bet_points < 200
+        User.reduce_point(user_id, 200 - player.bet_points)
         player.update(bet_points: 200, is_fold: true)
       end
       player.update(is_fold: true)

@@ -7,7 +7,6 @@ class BlackjackRoom < ActiveRecord::Base
         blackjack_players_id: SecureRandom.hex(16),
         dealer_hands_id: SecureRandom.hex(16)
       )
-      user_ids = user_ids.instance_of?(Array) ? user_ids.map(&:to_i) : [user_ids.to_i]
       BlackjackPlayer.add_players(room.id, user_ids)
       room
     end

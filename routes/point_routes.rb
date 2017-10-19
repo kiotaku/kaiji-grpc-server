@@ -4,10 +4,17 @@ class PointRoutes < Sinatra::Base
   end
 
   before do
-    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    if request.request_method == 'OPTIONS'
+      response.headers["Allow"] = "HEAD,GET,PUT,POST,DELETE,OPTIONS"
+      response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept"
+
+      halt 200
+    end
   end
 
   post('/get_point_balance') do
+    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
     user = User.find_by_id(params[:userId])
     if user.blank?
       json isSucceed: false
@@ -19,6 +26,7 @@ class PointRoutes < Sinatra::Base
   end
 
   post('/add_point') do
+    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
     result = User.add_point(params[:userId], params[:addPoints].to_i)
     if !result
       json isSucceed: false
