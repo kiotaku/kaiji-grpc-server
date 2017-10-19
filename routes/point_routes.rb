@@ -6,7 +6,7 @@ class PointRoutes < Sinatra::Base
   before do
     response.headers['Access-Control-Allow-Origin'] = '*'
   end
-  
+
   post('/get_point_balance') do
     user = User.find_by_id(params[:userId])
     if user.blank?
@@ -19,7 +19,7 @@ class PointRoutes < Sinatra::Base
   end
 
   post('/add_point') do
-    result = User.add_point(params[:userId], params[:addPoints])
+    result = User.add_point(params[:userId], params[:addPoints].to_i)
     if !result
       json isSucceed: false
     else
