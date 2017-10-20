@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
     def add(id, auto_assign = false, params = {})
       if auto_assign
         last_user = User.last
-        user = User.new params.merge(id: last_user ? last_user.id : 1)
+        user = User.new params.merge(id: last_user ? last_user.id + 1 : 1)
       else
         user = User.new params.merge(id: id)
       end
