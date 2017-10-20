@@ -14,7 +14,8 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/create_new_game_room') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     begin
       room = PokerRoom.create_room(params[:userIds])
     rescue
@@ -26,7 +27,8 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/call') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = PokerPlayer.call(params[:gameRoomId], params[:userId])
     json result: result,
          userId: params[:userId],
@@ -35,7 +37,8 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/raise') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = PokerPlayer.raise(params[:gameRoomId], params[:userId], params[:betPoints].to_i)
     json result: result,
          userId: params[:userId],
@@ -44,12 +47,14 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/check') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     json nothing: 'to do'
   end
 
   post('/fold') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = PokerPlayer.fold(params[:gameRoomId], params[:userId])
     json isSucceed: result,
          userId: params[:userId],
@@ -57,14 +62,16 @@ class PokerRoutes < Sinatra::Base
   end
 
   post('/set_winner') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     results = PokerRoom.room_game_result(params[:gameRoomId], params[:winnerId])
     json isSucceed: true,
          playerResults: results
   end
 
   post('/destroy_game_room') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     begin
       PokerRoom.destroy_room(params[:gameRoomId])
     rescue

@@ -14,12 +14,14 @@ class KaijiRoutes < Sinatra::Base
   end
 
   get('/ping') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     json message: 'pong'
   end
 
   post('/log') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     logger = Logger.new './log/application.log'
     case params[:logLevel].to_sym
     when :LOG_DEBUG
@@ -40,12 +42,14 @@ class KaijiRoutes < Sinatra::Base
   end
 
   post('/get_user_by_id') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     json user_model_convert_to_get_user_reply(User.find_by_id(params[:userId]))
   end
 
   post('/add_user') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = User.add(params[:userId],
                       params[:autoAssignId],
                       name: params[:name],
@@ -55,7 +59,8 @@ class KaijiRoutes < Sinatra::Base
   end
 
   post('/modify_user') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = User.modify(params[:userId],
                          name: params[:name],
                          is_available: params[:isAvailable],

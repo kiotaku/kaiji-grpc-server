@@ -14,7 +14,8 @@ class BlackjackRoutes < Sinatra::Base
   end
 
   post('/create_new_game_room') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     begin
       room = BlackjackRoom.create_room(params[:userIds])
     rescue
@@ -25,19 +26,22 @@ class BlackjackRoutes < Sinatra::Base
   end
 
   post('/betting') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     json result: BlackjackRoom.betting(params[:gameRoomId], params[:userId], params[:betPoints].to_i),
          userId: params[:userId]
   end
 
   post('/set_game_result') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     json isSucceed: true,
          playerResults: BlackjackRoom.result_room(params[:gameRoomId], params[:results])
   end
 
   post('/destroy_game_room') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     begin
       BlackjackRoom.destroy_room(params[:gameRoomId])
     rescue

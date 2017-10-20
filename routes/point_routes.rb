@@ -14,7 +14,8 @@ class PointRoutes < Sinatra::Base
   end
 
   post('/get_point_balance') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     user = User.find_by_id(params[:userId])
     if user.blank?
       json isSucceed: false
@@ -26,7 +27,8 @@ class PointRoutes < Sinatra::Base
   end
 
   post('/add_point') do
-    params = {}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }])
+    old_params = params
+    params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
     result = User.add_point(params[:userId], params[:addPoints].to_i)
     if !result
       json isSucceed: false
