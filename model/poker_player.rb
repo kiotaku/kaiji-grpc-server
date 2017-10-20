@@ -3,12 +3,17 @@ require 'securerandom'
 class PokerPlayer < ActiveRecord::Base
   class << self
     def add_players(room_id, user_ids)
-      user_ids.each do |user_id|
+      user_ids.each_with_index do |user_id, i|
         PokerPlayer.create(
           poker_room_id: room_id,
           user_id: user_id,
           hands_id: SecureRandom.hex(16)
         )
+        if i == 0
+          raise(room_id, user_id, 100)
+        else
+          call(room_id, user_id)
+        end
       end
     end
 
@@ -38,10 +43,6 @@ class PokerPlayer < ActiveRecord::Base
 
     def fold(room_id, user_id)
       player = find_in_room(room_id, user_id)
-      if player.bet_points < 200
-        User.reduce_point(user_id, 200 - player.bet_points)
-        player.update(bet_points: 200, is_fold: true)
-      end
       player.update(is_fold: true)
     end
 
