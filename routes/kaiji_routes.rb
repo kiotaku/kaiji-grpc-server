@@ -13,6 +13,10 @@ class KaijiRoutes < Sinatra::Base
     end
   end
 
+  get('/top_user') do
+    json User.select(Arel.star).order(:continue_count, points: :desc).limit(10).map{ |u| user_model_convert_to_get_user_reply(u) }
+  end
+
   get('/ping') do
     old_params = params
     params = ({}.merge(params || {}).merge(Hash[JSON.parse(request.body.read).map{ |k, v| [k.to_sym, v] }]) rescue old_params)
